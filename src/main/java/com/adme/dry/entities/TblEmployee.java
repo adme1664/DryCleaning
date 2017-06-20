@@ -4,7 +4,6 @@
  * and open the template in the editor.
  */
 package com.adme.dry.entities;
-
 import java.io.Serializable;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -27,19 +26,20 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Table(name = "Tbl_Employee")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "TblEmployee.findAll", query = "SELECT t FROM TblEmployee t"),
-    @NamedQuery(name = "TblEmployee.findById", query = "SELECT t FROM TblEmployee t WHERE t.id = :id"),
-    @NamedQuery(name = "TblEmployee.findByEmployeeId", query = "SELECT t FROM TblEmployee t WHERE t.employeeId = :employeeId"),
-    @NamedQuery(name = "TblEmployee.findByEmployeeLastName", query = "SELECT t FROM TblEmployee t WHERE t.employeeLastName = :employeeLastName"),
-    @NamedQuery(name = "TblEmployee.findByEmployeeFirstName", query = "SELECT t FROM TblEmployee t WHERE t.employeeFirstName = :employeeFirstName"),
-    @NamedQuery(name = "TblEmployee.findByEmployeeGender", query = "SELECT t FROM TblEmployee t WHERE t.employeeGender = :employeeGender"),
-    @NamedQuery(name = "TblEmployee.findByEmployeeAdress", query = "SELECT t FROM TblEmployee t WHERE t.employeeAdress = :employeeAdress"),
-    @NamedQuery(name = "TblEmployee.findByEmployeePhone", query = "SELECT t FROM TblEmployee t WHERE t.employeePhone = :employeePhone"),
-    @NamedQuery(name = "TblEmployee.findByEmployeeStatus", query = "SELECT t FROM TblEmployee t WHERE t.employeeStatus = :employeeStatus"),
-    @NamedQuery(name = "TblEmployee.findByCreateUser", query = "SELECT t FROM TblEmployee t WHERE t.createUser = :createUser"),
-    @NamedQuery(name = "TblEmployee.findByCreateDate", query = "SELECT t FROM TblEmployee t WHERE t.createDate = :createDate"),
-    @NamedQuery(name = "TblEmployee.findByUpdateUser", query = "SELECT t FROM TblEmployee t WHERE t.updateUser = :updateUser"),
-    @NamedQuery(name = "TblEmployee.findByUdpateDate", query = "SELECT t FROM TblEmployee t WHERE t.udpateDate = :udpateDate")})
+        @NamedQuery(name = "TblEmployee.findAll", query = "SELECT t FROM TblEmployee t"),
+        @NamedQuery(name = "TblEmployee.findById", query = "SELECT t FROM TblEmployee t WHERE t.id = :id"),
+        @NamedQuery(name = "TblEmployee.findByEmployeeLastName", query = "SELECT t FROM TblEmployee t WHERE t.employeeLastName = :employeeLastName"),
+        @NamedQuery(name = "TblEmployee.findByEmployeeFirstName", query = "SELECT t FROM TblEmployee t WHERE t.employeeFirstName = :employeeFirstName"),
+        @NamedQuery(name = "TblEmployee.findByEmployeeGender", query = "SELECT t FROM TblEmployee t WHERE t.employeeGender = :employeeGender"),
+        @NamedQuery(name = "TblEmployee.findByEmployeeAdress", query = "SELECT t FROM TblEmployee t WHERE t.employeeAdress = :employeeAdress"),
+        @NamedQuery(name = "TblEmployee.findByEmployeePhone", query = "SELECT t FROM TblEmployee t WHERE t.employeePhone = :employeePhone"),
+        @NamedQuery(name = "TblEmployee.findByCreateUser", query = "SELECT t FROM TblEmployee t WHERE t.createUser = :createUser"),
+        @NamedQuery(name = "TblEmployee.findByCreateDate", query = "SELECT t FROM TblEmployee t WHERE t.createDate = :createDate"),
+        @NamedQuery(name = "TblEmployee.findByUpdateUser", query = "SELECT t FROM TblEmployee t WHERE t.updateUser = :updateUser"),
+        @NamedQuery(name = "TblEmployee.findByUdpateDate", query = "SELECT t FROM TblEmployee t WHERE t.udpateDate = :udpateDate"),
+        @NamedQuery(name = "TblEmployee.findByEmployeeUsername", query = "SELECT t FROM TblEmployee t WHERE t.employeeUsername = :employeeUsername"),
+        @NamedQuery(name = "TblEmployee.findByEmployeePassword", query = "SELECT t FROM TblEmployee t WHERE t.employeePassword = :employeePassword"),
+        @NamedQuery(name = "TblEmployee.findByEmployeeStatus", query = "SELECT t FROM TblEmployee t WHERE t.employeeStatus = :employeeStatus")})
 public class TblEmployee implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -47,10 +47,6 @@ public class TblEmployee implements Serializable {
     @NotNull
     @Column(name = "id")
     private Integer id;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "employee_id")
-    private int employeeId;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 50)
@@ -70,9 +66,6 @@ public class TblEmployee implements Serializable {
     @Size(max = 20)
     @Column(name = "employee_phone")
     private String employeePhone;
-    @Size(max = 36)
-    @Column(name = "employee_status")
-    private String employeeStatus;
     @Basic(optional = false)
     @NotNull
     @Column(name = "create_user")
@@ -87,6 +80,16 @@ public class TblEmployee implements Serializable {
     @Size(max = 10)
     @Column(name = "udpate_date")
     private String udpateDate;
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 100)
+    @Column(name = "employee_username")
+    private String employeeUsername;
+    @Size(max = 300)
+    @Column(name = "employee_password")
+    private String employeePassword;
+    @Column(name = "employee_status")
+    private Integer employeeStatus;
     @JoinColumn(name = "employee_type", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private TblTypeEmployee employeeType;
@@ -98,13 +101,13 @@ public class TblEmployee implements Serializable {
         this.id = id;
     }
 
-    public TblEmployee(Integer id, int employeeId, String employeeLastName, String employeeFirstName, int createUser, String createDate) {
+    public TblEmployee(Integer id, String employeeLastName, String employeeFirstName, int createUser, String createDate, String employeeUsername) {
         this.id = id;
-        this.employeeId = employeeId;
         this.employeeLastName = employeeLastName;
         this.employeeFirstName = employeeFirstName;
         this.createUser = createUser;
         this.createDate = createDate;
+        this.employeeUsername = employeeUsername;
     }
 
     public Integer getId() {
@@ -113,14 +116,6 @@ public class TblEmployee implements Serializable {
 
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    public int getEmployeeId() {
-        return employeeId;
-    }
-
-    public void setEmployeeId(int employeeId) {
-        this.employeeId = employeeId;
     }
 
     public String getEmployeeLastName() {
@@ -163,14 +158,6 @@ public class TblEmployee implements Serializable {
         this.employeePhone = employeePhone;
     }
 
-    public String getEmployeeStatus() {
-        return employeeStatus;
-    }
-
-    public void setEmployeeStatus(String employeeStatus) {
-        this.employeeStatus = employeeStatus;
-    }
-
     public int getCreateUser() {
         return createUser;
     }
@@ -201,6 +188,30 @@ public class TblEmployee implements Serializable {
 
     public void setUdpateDate(String udpateDate) {
         this.udpateDate = udpateDate;
+    }
+
+    public String getEmployeeUsername() {
+        return employeeUsername;
+    }
+
+    public void setEmployeeUsername(String employeeUsername) {
+        this.employeeUsername = employeeUsername;
+    }
+
+    public String getEmployeePassword() {
+        return employeePassword;
+    }
+
+    public void setEmployeePassword(String employeePassword) {
+        this.employeePassword = employeePassword;
+    }
+
+    public Integer getEmployeeStatus() {
+        return employeeStatus;
+    }
+
+    public void setEmployeeStatus(Integer employeeStatus) {
+        this.employeeStatus = employeeStatus;
     }
 
     public TblTypeEmployee getEmployeeType() {
@@ -235,5 +246,5 @@ public class TblEmployee implements Serializable {
     public String toString() {
         return "com.dry.entities.TblEmployee[ id=" + id + " ]";
     }
-    
+
 }
