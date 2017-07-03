@@ -1,6 +1,9 @@
 package com.adme.dry.bean;
 
+import com.adme.dry.entities.TblEmployee;
+import com.adme.dry.mappers.Mapper;
 import com.adme.dry.repository.TypeEmployeeRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.Serializable;
 
@@ -23,6 +26,16 @@ public class EmployeeBean implements Serializable {
     private TypeEmployeeBean employeeType;
     private String employeeUsername;
     private String employeePassword;
+
+    @Autowired
+    Mapper mapper;
+
+    public EmployeeBean(TblEmployee tblEmployee){
+
+    }
+    public EmployeeBean(){
+
+    }
 
     public Integer getId() {
         return id;

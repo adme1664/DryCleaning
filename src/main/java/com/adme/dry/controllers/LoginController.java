@@ -1,5 +1,6 @@
 package com.adme.dry.controllers;
 
+import com.adme.dry.configuration.CustomUserDetails;
 import org.apache.log4j.Logger;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -28,10 +29,14 @@ public class LoginController {
 
     @RequestMapping("/home")
     public String index(Model model) {
-        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (userDetails != null) {
-            log.info("User connected:" + userDetails.getUsername());
-            model.addAttribute("user",userDetails.getUsername());
+        //User customUserDetails = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        CustomUserDetails customUserDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        if (customUserDetails != null) {
+            log.info("User connected:" + customUserDetails.getUsername());
+            log.info("User Role:"+customUserDetails.getTypeEmployeeBean().getTypeName());
+            model.addAttribute("user",customUserDetails.getUsername());
+            model.addAttribute("userDetails", customUserDetails);
         }
         return VIEW_BASE + "home";
     }

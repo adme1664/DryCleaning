@@ -2709,6 +2709,7 @@ body {
   font-size: 13px;
   color: #676a6c;
   overflow-x: hidden;
+  overflow-y: hidden;
 }
 body.boxed-layout {
   background: url('patterns/shattered.png');

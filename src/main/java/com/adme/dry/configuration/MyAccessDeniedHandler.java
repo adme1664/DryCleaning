@@ -6,6 +6,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -15,7 +16,7 @@ import java.io.IOException;
 /**
  * Created by Adme System on 6/14/2017.
  */
-@Component
+@Service("myAccessDeniedHandler")
 public class MyAccessDeniedHandler implements AccessDeniedHandler {
 
 

@@ -19,18 +19,19 @@ import org.springframework.stereotype.Component;
 public class SpringSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Autowired
+    @Qualifier(value="myAccessDeniedHandler")
     MyAccessDeniedHandler accessDeniedHandler;
 
     @Autowired
+    @Qualifier(value="myAuthenticationProvider")
     MyAuthenticationProvider myAuthenticationProvider;
 
     @Override
     protected void configure(HttpSecurity security) throws Exception{
         security.csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/","/about","/assets/**","/vendor/**").permitAll()
-                .antMatchers("/admin**").hasAnyRole("ADMIN")
-                .anyRequest().authenticated()
+                .antMatchers("/login","/about","/assets/**","/assets/fonts/**","/assets/font-awesome/**","/assets/css/**","/assets/js/**","/assets/img/**","/vendor/**").permitAll().anyRequest().fullyAuthenticated()
+
                 .and()
                     .formLogin()
                     .loginPage("/login")

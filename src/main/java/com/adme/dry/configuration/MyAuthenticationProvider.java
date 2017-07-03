@@ -2,6 +2,7 @@ package com.adme.dry.configuration;
 
 import com.adme.dry.bean.EmployeeBean;
 import com.adme.dry.services.LoginServiceImpl;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Role;
@@ -20,13 +21,15 @@ import java.util.List;
 /**
  * Created by Adme System on 6/15/2017.
  */
-@Service
-public class MyAuthenticationProvider implements UserDetailsService {
+@Service("myAuthenticationProvider")
+public class MyAuthenticationProvider  implements UserDetailsService {
 
     boolean enabled = true;
     boolean accountNonExpired = true;
     boolean credentialsNonExpired = true;
     boolean accountNonLocked = true;
+
+    Logger log=Logger.getLogger(MyAuthenticationProvider.class);
 
     @Autowired
     @Qualifier("loginServiceImpl")
@@ -44,11 +47,12 @@ public class MyAuthenticationProvider implements UserDetailsService {
             userBean.setPassword(employeeBean.getEmployeePassword());
             userBean.setRoles(new ArrayList<RoleBean>());
             userBean.getRoles().add(roleBean);
-            //CustomUserDetails user = new CustomUserDetails(userBean.getUsername(), userBean.getPassword(), enabled, accountNonExpired, credentialsNonExpired, accountNonLocked, getRoles(userBean.getRoles()));
-            User user = new User(userBean.getUsername(), userBean.getPassword(), enabled, accountNonExpired, credentialsNonExpired, accountNonLocked, getRoles(userBean.getRoles()));
+            //User user = new User(userBean.getUsername(), userBean.getPassword(), enabled, accountNonExpired, credentialsNonExpired, accountNonLocked, getRoles(userBean.getRoles()));
+            CustomUserDetails user = new CustomUserDetails(userBean.getUsername(), userBean.getPassword(),employeeBean,employeeBean.getEmployeeType(), enabled, accountNonExpired, credentialsNonExpired, accountNonLocked, getRoles(userBean.getRoles()));
             return user;
         } catch (Exception ex) {
-
+            log.info(ex.getMessage());
+            ex.printStackTrace();
         }
         return null;
     }

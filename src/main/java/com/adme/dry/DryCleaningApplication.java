@@ -22,8 +22,6 @@ public class DryCleaningApplication extends  SpringBootServletInitializer {
 	protected SpringApplicationBuilder configure(SpringApplicationBuilder application){
 		return application.sources(DryCleaningApplication.class);
 	}
-
-
 	public static void main(String[] args) {
 		SpringApplication.run(DryCleaningApplication.class, args);
 	}

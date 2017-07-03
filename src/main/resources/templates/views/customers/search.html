@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.w3.org/1999/xhtml" layout:decorator="views/layout/main_layout">
+<head>
+
+<title>List Of Customers</title>
+    <th:block layout:fragment="custom-css" th:remove="tag">
+        <link href="css/plugins/jQueryUI/jquery-ui-1.10.4.custom.min.css" media="screen" th:href="@{/assets/css/plugins/jQueryUI/jquery-ui-1.10.4.custom.min.css}" rel="stylesheet" type="text/css" />
+        <link href="css/plugins/jqGrid/ui.jqgrid.css" rel="stylesheet" media="screen" th:href="@{/assets/css/plugins/jqGrid/ui.jqgrid.css}"  type="text/css" />
+    </th:block>
+</head>
+<body>
+<div layout:fragment="content" th:remove="tag">
+    <div class="wrapper wrapper-content  animated fadeInRight">
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>All the customers </h5>
+
+                        <div class="ibox-tools">
+                            <a class="collapse-link">
+                                <i class="fa fa-chevron-up"></i>
+                            </a>
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                <i class="fa fa-wrench"></i>
+                            </a>
+                            <a class="close-link">
+                                <i class="fa fa-times"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="ibox-content">
+                        <div class="row">
+
+                            <div class="col-sm-12">
+                                <div class="input-group col-sm-12">
+                                    <input type="text" placeholder="Search" class="input-sm form-control " id="txtSearch" /> </div>
+                            </div>
+                        </div>
+                        <div class="jqGrid_wrapper">
+                            <table id="table_customer"></table>
+                            <div id="pager_customer_list"></div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div id="detailsContents">
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<div layout:fragment="script-bottom" th:remove="tag">
+    <!-- jqGrid -->
+    <script src="js/plugins/jqGrid/i18n/grid.locale-en.js" th:src="@{/assets/js/plugins/jqGrid/i18n/grid.locale-en.js}"></script>
+    <script src="js/plugins/jqGrid/jquery.jqGrid.min.js" th:src="@{/assets/js/plugins/jqGrid/jquery.jqGrid.min.js}"></script>
+    <script type="text/javascript" th:inline="javascript">
+        $(document).ready(function () {
+            var search = false;
+            var grid=$("#table_customer");
+            grid.jqGrid({
+                url: "/dry/customer/listOfCustomers",
+                datatype: "json",
+                mtype: 'GET',
+                colNames: ['Id', 'First Name', 'Last Name', 'Phone'],
+                shrinkToFit: true,
+                colModel:
+                        [
+                            {name: 'id', index: 'id', width: 15, editable: false, editoptions: {readonly: true, size: 10}, hidden: true},
+                            {name: 'customerFirstName', index: 'customerFirstName', search: true, width: 25}
+                            , {name: 'customerLastName', index: 'customerLastName', width: 25}
+                            , {name: 'customerPhone1', index: 'customerPhone1', width: 15}
+
+                        ],
+                postData: {},
+                rowNum: 10,
+                rowList: [10, 20, 40, 60],
+                height: 370,
+                width: 500,
+                autowidth: true,
+                rownumbers: true,
+                pager: '#pager_customer_list',
+                sortname: 'customerFirstName',
+                viewrecords: true,
+                sortorder: "asc",
+                caption: "Customers",
+                emptyrecords: "Empty records",
+                jsonReader: {
+                    root: "rows",
+                    page: "page",
+                    total: "total",
+                    records: "records",
+                    repeatitems: false,
+                    cell: "cell",
+                    id: "id"
+                },
+                beforeRequest:function(){
+                    this.p.postData._search = search;
+                    this.p.postData.firstName=$("#txtSearch").val();
+                },
+                onSelectRow:function(rowId){
+                    var row=$("#table_customer").getRowData(rowId);
+                    $.ajax({
+                        url: "/dry/customer/getCustomer?id=" + row.id,
+                        contentType: 'application/html; charset=utf-8',
+                        type: "GET",
+                        dataType: "html"
+                    }).success(function (data) {
+                        $("#detailsContents").html("");
+                        $("#detailsContents").html(data);
+                    })
+
+                },
+                loadComplete:function(){
+                    var ids=grid.jqGrid('getDataIDs')
+                    var firstRow=ids[0];
+                    grid.jqGrid('setSelection',firstRow);
+                }
+
+
+
+            });
+            $("#txtSearch").on('input', function (e) {
+                search = true;
+                $("#table_customer").trigger("reloadGrid", {page: 1});
+            });
+
+        });
+    </script>
+</div>
+</html>
