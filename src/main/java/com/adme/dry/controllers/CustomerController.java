@@ -1,6 +1,7 @@
 package com.adme.dry.controllers;
 
 import com.adme.dry.bean.CustomerBean;
+import com.adme.dry.bean.SessionBean;
 import com.adme.dry.constant.Constant;
 import com.adme.dry.entities.TblCustomer;
 import com.adme.dry.exception.SaveException;
@@ -13,6 +14,7 @@ import com.adme.dry.services.CustomerServiceImpl;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Scope;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -31,6 +33,7 @@ import java.util.List;
  * Created by Adme System on 6/21/2017.
  */
 @Controller("/customer")
+@Scope(value = "request")
 public class CustomerController {
 
     private static final String VIEW_BASE = "views/customers/";
@@ -45,15 +48,28 @@ public class CustomerController {
     @Autowired
     CustomerServiceImpl customerService;
 
+    @Autowired
+    SessionBean sessionBean;
+
+    @ModelAttribute("beanSession")
+    public SessionBean beanSession(){
+        return sessionBean;
+    }
+
     @RequestMapping(value = "customer/add", method = RequestMethod.GET)
     public String getCustomer() {
+        log.info("Variable of Session:" + sessionBean.getCustomUserDetails().getTypeEmployeeBean().getTypeName());
         return VIEW_BASE + "add";
     }
+
+
 
     @RequestMapping(value = "customer/addCustomer", method = RequestMethod.POST)
     public String addCustomer(@ModelAttribute("customerBean") CustomerBean customerBean, Model model) {
         try {
+            beanSession();
             log.info("Name Of customer:" + customerBean.toString());
+            log.info("VAriable of Session:" + sessionBean.getCustomUserDetails().getTypeEmployeeBean().getTypeName());
             DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
             Date date = new Date();
             String dateNow = dateFormat.format(date);
@@ -79,6 +95,7 @@ public class CustomerController {
 
     @RequestMapping(value = "customer/search", method = RequestMethod.GET)
     public String searchAllCustomers(Model model) {
+        beanSession();
         List<CustomerBean> searchAllCustomers = new ArrayList<>();
         List<TblCustomer> listOf = customerService.searchAllCustomers();
         for (TblCustomer customer : listOf) {
@@ -181,6 +198,7 @@ public class CustomerController {
         String methodName = "getCustomerInformation";
         try
         {
+            beanSession();
             if(id!=null && !id.equalsIgnoreCase("")){
                 log.info("Customer number"+id);
                 int customerId=Integer.parseInt(id);
@@ -195,5 +213,21 @@ public class CustomerController {
             ex.printStackTrace();
         }
         return VIEW_BASE+"customerDetails";
+    }
+    @RequestMapping(value="customer/updateCustomer", method = RequestMethod.GET)
+    public String updateCustomer(@RequestParam("id") String id, Model model){
+        String methodName = "updateCustomer";
+        try
+        {
+            int customerId=Integer.parseInt(id);
+            CustomerBean customerBean=mapper.tblCustomerToCustomerBean(customerService.getCustomerById(customerId));
+            log.info("Customer name"+customerBean.getCustomerFirstName());
+            model.addAttribute("customer",customerBean);
+        }
+        catch (Exception ex){
+            log.info(ERROR_START_MESSAGE + "" + CLASSNAME + "/" + methodName + ":" + ex.getMessage());
+            ex.printStackTrace();
+        }
+        return VIEW_BASE+"updateCustomer";
     }
 }

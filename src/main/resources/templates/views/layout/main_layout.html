@@ -38,8 +38,9 @@
                             <a data-toggle="dropdown" class="dropdown-toggle" href="#">
                             <span class="clear"> <span class="block m-t-xs"> <strong class="font-bold">David
                                 Williams</strong>
-                             </span> <span class="text-muted text-xs block" th:text="${userDetails.getTypeEmployeeBean().getTypeName()}"><b
-                                    class="caret"></b></span> </span> </a>
+                             </span> <span class="text-muted text-xs block" th:text="${beanSession.getCustomUserDetails().getTypeEmployeeBean().getTypeName()}"><b
+                                    class="caret"></b></span> </span>
+                            </a>
                             <ul class="dropdown-menu animated fadeInRight m-t-xs">
                                 <li><a href="login.html" th:href="@{/logout}">Logout</a></li>
                             </ul>

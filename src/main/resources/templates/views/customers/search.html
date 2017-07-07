@@ -42,16 +42,24 @@
                             <table id="table_customer"></table>
                             <div id="pager_customer_list"></div>
                         </div>
+                        <div>
+                            <button type="button" class="btn btn-sm btn-primary"  data-toggle="modal" data-target="#modalUpdate" id="btnUpdate">Update</button>
+                        </div>
 
                     </div>
                 </div>
             </div>
             <div class="col-lg-6">
-                <div id="detailsContents">
+               <div id="detailsContents">
 
                 </div>
 
             </div>
+            <div class="modal inmodal"  tabindex="-1" role="dialog" id="modalUpdate"  aria-hidden="true">
+
+            </div>
+
+
         </div>
     </div>
 </div>
@@ -63,6 +71,7 @@
     <script type="text/javascript" th:inline="javascript">
         $(document).ready(function () {
             var search = false;
+            var idRow=0;
             var grid=$("#table_customer");
             grid.jqGrid({
                 url: "/dry/customer/listOfCustomers",
@@ -81,7 +90,7 @@
                 postData: {},
                 rowNum: 10,
                 rowList: [10, 20, 40, 60],
-                height: 370,
+                height: 300,
                 width: 500,
                 autowidth: true,
                 rownumbers: true,
@@ -106,6 +115,7 @@
                 },
                 onSelectRow:function(rowId){
                     var row=$("#table_customer").getRowData(rowId);
+                    idRow=row.id;
                     $.ajax({
                         url: "/dry/customer/getCustomer?id=" + row.id,
                         contentType: 'application/html; charset=utf-8',
@@ -115,6 +125,17 @@
                         $("#detailsContents").html("");
                         $("#detailsContents").html(data);
                     })
+
+                    $.ajax({
+                    url: "/dry/customer/updateCustomer?id=" + idRow,
+                    contentType: 'application/html; charset=utf-8',
+                    type: "GET",
+                    dataType: "html"
+                    }).success(function (data) {
+                        $("#modalUpdate").html("");
+                        $("#modalUpdate").html(data);
+                    })
+
 
                 },
                 loadComplete:function(){
@@ -130,6 +151,19 @@
                 search = true;
                 $("#table_customer").trigger("reloadGrid", {page: 1});
             });
+
+            var btnUpdate=$("#btnUpdate");
+//            btnUpdate.click(function(){
+//                $.ajax({
+//                    url: "/dry/customer/updateCustomer?id=" + idRow,
+//                    contentType: 'application/html; charset=utf-8',
+//                    type: "GET",
+//                    dataType: "html"
+//                }).success(function (data) {
+//                    $("#modalUpdate").html("");
+//                    $("#modalUpdate").html(data);
+//                })
+//            });
 
         });
     </script>

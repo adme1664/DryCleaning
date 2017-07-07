@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<body>
+<div class="modal-dialog">
+        <div class="modal-content animated fadeIn">
+            <div class="modal-header">
+                <h4 class="modal-title">Update Customer <span th:text="${customer.getCustomerFirstName()}"></span></h4>
+            </div>
+            <div class="modal-body">
+                <form role="form" action="#" th:action="@{/customer/addCustomer}" th:object="${customerBean}" th:method="POST">
+
+                    <div class="col-sm-6 b-r">
+                        <div class="form-group">
+                            <label>First Name</label>
+                            <input type="text" name="customerFirstName" id="customerFirstName" placeholder="Enter the name" class="form-control" th:value="${customer.getCustomerFirstName()}" />
+                        </div>
+                        <div class="form-group"><label>Last Name</label>
+                            <input type="text" name="customerLastName" id="customerLastName" placeholder="Last Name" class="form-control" th:value="${customer.getCustomerLastName()}" />
+                        </div>
+                        <div class="form-group">
+                            <label>Adress</label>
+                            <textarea name="customerAdress" placeholder="The Adress" class="form-control" rows="2" id="customerAdress" th:value="${customer.getCustomerAdress()}"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Phone Number 1</label>
+                            <input type="text" name="customerPhone1" id="customerPhone1" placeholder="Phone 1" class="form-control" th:value="${customer.getCustomerPhone1()}" />
+                        </div>
+                        <div>
+                            <button class="btn btn-sm btn-primary pull-right m-t-n-xs" type="submit">
+                                <strong>Save</strong></button>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+
+                        <div class="form-group">
+                            <label>Phone Number 2</label>
+                            <input type="text" name="customerPhone2" id="customerPhone2" placeholder="Phone 2" class="form-control" th:value="${customer.getCustomerPhone2()}" />
+                        </div>
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input type="email" name="customerEmail" id="customerEmail" placeholder="Email" class="form-control" th:value="${customer.getCustomerEmail()}" />
+                        </div>
+                        <div class="form-group">
+                            <label>Prefered Communication</label>
+                            <select name="customerPreferedCommunication" class="form-control m-b">
+                                <option></option>
+                                <option value="1">Phone</option>
+                                <option value="2">Email</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Remarks</label>
+                            <textarea name="customerRemarks" class="form-control" rows="2" id="Remarks" th:value="${customer.getCustomerRemarks()}"></textarea>
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
+              </div>
+        </div>
+    </div>
+</body>
+</html>
