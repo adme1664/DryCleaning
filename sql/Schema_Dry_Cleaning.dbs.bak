@@ -1,0 +1,614 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project name="sch_dry_cleaning" id="Project_167f7066" html="y" template="Default" database="SqlServer" >
+	<comment><![CDATA[Schema d'une base de donnees assurant la gestion d'un dry cleaning
+]]></comment>
+	<schema name="dbo" schemaname="dbo" >
+		<table name="Tbl_Color" >
+			<column name="id" type="int" length="10" decimal="0" jt="4" mandatory="y" autoincrement="y" />
+			<column name="color_name" type="varchar" length="50" decimal="0" jt="12" mandatory="y" >
+				<defo>&#039;COLOR&#039;</defo>
+			</column>
+			<column name="color_code" type="varchar" length="10" decimal="0" jt="12" mandatory="y" />
+			<column name="create_user" type="int" length="10" decimal="0" jt="4" mandatory="y" >
+				<defo>1</defo>
+			</column>
+			<column name="create_date" type="date" length="10" decimal="0" jt="91" mandatory="y" />
+			<column name="update_user" type="int" length="10" decimal="0" jt="4" />
+			<column name="update_date" type="date" length="10" decimal="0" jt="91" />
+			<index name="Pk_Tbl_Color" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+		</table>
+		<table name="Tbl_Customer" >
+			<comment><![CDATA[Table assurant la gestion des clients. L`ensemble d`informations sur les clients]]></comment>
+			<column name="id" type="int" length="10" decimal="0" jt="4" mandatory="y" autoincrement="y" />
+			<column name="customer_id" type="int" length="10" decimal="0" jt="4" mandatory="y" >
+				<comment><![CDATA[Identifiant unqiue identifiant le client]]></comment>
+			</column>
+			<column name="customer_first_name" type="varchar" length="100" decimal="0" jt="12" mandatory="y" />
+			<column name="customer_last_name" type="varchar" length="100" decimal="0" jt="12" mandatory="y" />
+			<column name="customer_adress" type="varchar" length="200" decimal="0" jt="12" mandatory="y" />
+			<column name="customer_phone_1" type="varchar" length="20" decimal="0" jt="12" mandatory="y" />
+			<column name="customer_phone_2" type="varchar" length="20" decimal="0" jt="12" />
+			<column name="customer_email" type="varchar" length="100" decimal="0" jt="12" />
+			<column name="customer_prefered_communication" type="varchar" length="20" decimal="0" jt="12" />
+			<column name="customer_remarks" type="varchar" length="250" decimal="0" jt="12" />
+			<column name="customer_status" type="int" length="10" decimal="0" jt="4" mandatory="y" >
+				<defo>1</defo>
+			</column>
+			<column name="customer_delivery_mode" type="int" length="10" decimal="0" jt="4" />
+			<column name="create_user" type="varchar" length="25" decimal="0" jt="12" mandatory="y" >
+				<defo>&#039;ADMIN&#039;</defo>
+			</column>
+			<column name="create_date" type="date" length="10" decimal="0" jt="91" mandatory="y" />
+			<column name="update_user" type="varchar" length="20" decimal="0" jt="12" mandatory="y" >
+				<defo>&#039;ADMIN&#039;</defo>
+			</column>
+			<column name="update_date" type="date" length="10" decimal="0" jt="91" />
+			<index name="Pk_Tbl_Customer" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<index name="Idx_Tbl_Customer" unique="UNIQUE" >
+				<column name="customer_id" />
+			</index>
+		</table>
+		<table name="Tbl_Details_Ticket" >
+			<comment><![CDATA[Ensembles des pieces dans un ticket]]></comment>
+			<column name="id" type="int" length="10" decimal="0" jt="4" mandatory="y" autoincrement="y" />
+			<column name="piece_id" type="int" length="10" decimal="0" jt="4" mandatory="y" >
+				<comment><![CDATA[Une piece dans un ticket
+]]></comment>
+			</column>
+			<column name="ticke_id" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="piece_type" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="piece_state" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="piece_color" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="piece_mark" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="price" type="float" length="53" decimal="0" jt="8" mandatory="y" />
+			<column name="type_service" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<index name="Pk_Tbl_Details_Ticket" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<index name="idx_Tbl_Details_Ticket" unique="NORMAL" >
+				<column name="piece_id" />
+			</index>
+			<index name="idx_Tbl_Details_Ticket_0" unique="NORMAL" >
+				<column name="piece_color" />
+			</index>
+			<index name="idx_Tbl_Details_Ticket_1" unique="NORMAL" >
+				<column name="piece_type" />
+			</index>
+			<index name="idx_Tbl_Details_Ticket_2" unique="NORMAL" >
+				<column name="ticke_id" />
+			</index>
+			<index name="idx_Tbl_Details_Ticket_3" unique="NORMAL" >
+				<column name="type_service" />
+			</index>
+			<fk name="fk_tbl_details_color" to_schema="dbo" to_table="Tbl_Color" >
+				<fk_column name="piece_color" pk="id" />
+			</fk>
+			<fk name="fk_tbl_details_piece" to_schema="dbo" to_table="Tbl_Piece" >
+				<fk_column name="piece_id" pk="id" />
+			</fk>
+			<fk name="fk_tbl_details_ticket_service" to_schema="dbo" to_table="Tbl_Service" >
+				<fk_column name="type_service" pk="id" />
+			</fk>
+			<fk name="fk_tbl_details_ticket" to_schema="dbo" to_table="Tbl_Ticket" >
+				<fk_column name="ticke_id" pk="id" />
+			</fk>
+			<fk name="fk_tbl_details_Type_piece" to_schema="dbo" to_table="Tbl_Type_Piece" >
+				<fk_column name="piece_type" pk="id" />
+			</fk>
+		</table>
+		<table name="Tbl_Employee" >
+			<column name="id" type="int" length="10" decimal="0" jt="4" mandatory="y" autoincrement="y" />
+			<column name="employee_last_name" type="varchar" length="50" decimal="0" jt="12" mandatory="y" />
+			<column name="employee_first_name" type="varchar" length="50" decimal="0" jt="12" mandatory="y" />
+			<column name="employee_gender" type="varchar" length="1" decimal="0" jt="12" />
+			<column name="employee_adress" type="varchar" length="150" decimal="0" jt="12" />
+			<column name="employee_phone" type="varchar" length="20" decimal="0" jt="12" />
+			<column name="employee_type" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="employee_password" type="varchar" length="300" jt="12" />
+			<column name="employee_status" type="int" jt="4" />
+			<column name="employee_username" type="varchar" length="100" jt="12" mandatory="y" />
+			<column name="create_user" type="int" length="10" decimal="0" jt="4" mandatory="y" >
+				<defo>1</defo>
+			</column>
+			<column name="create_date" type="date" length="10" decimal="0" jt="91" mandatory="y" />
+			<column name="update_user" type="int" length="10" decimal="0" jt="4" />
+			<column name="udpate_date" type="date" length="10" decimal="0" jt="91" />
+			<index name="Pk_Tbl_User" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<index name="idx_Tbl_Employee" unique="NORMAL" >
+				<column name="employee_type" />
+			</index>
+			<fk name="fk_tbl_employee_type_employee" to_schema="dbo" to_table="Tbl_Type_Employee" >
+				<fk_column name="employee_type" pk="id" />
+			</fk>
+		</table>
+		<table name="Tbl_Enterprise" >
+			<column name="id" type="int" length="10" decimal="0" jt="4" mandatory="y" autoincrement="y" />
+			<column name="enterprise_name" type="varchar" length="100" decimal="0" jt="12" mandatory="y" />
+			<column name="enterprise_adress" type="varchar" length="150" decimal="0" jt="12" mandatory="y" />
+			<column name="enterprise_slogan" type="varchar" length="250" decimal="0" jt="12" />
+			<column name="enterprise_telephone" type="varchar" length="20" decimal="0" jt="12" />
+			<column name="enterprise_email" type="varchar" length="50" decimal="0" jt="12" />
+			<column name="enterprise_logo" type="image" length="2147483647" decimal="0" jt="-4" />
+			<column name="create_user" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="create_date" type="date" length="10" decimal="0" jt="91" mandatory="y" />
+			<column name="update_user" type="int" length="10" decimal="0" jt="4" />
+			<column name="update_date" type="date" length="10" decimal="0" jt="91" />
+			<index name="Pk_Tbl_Enterprise" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+		</table>
+		<table name="Tbl_Payment" >
+			<comment><![CDATA[Paiement des tickets]]></comment>
+			<column name="id" type="int" length="10" decimal="0" jt="4" mandatory="y" autoincrement="y" />
+			<column name="ticket_id" type="int" length="10" decimal="0" jt="4" mandatory="y" >
+				<comment><![CDATA[Le numero du ticket
+]]></comment>
+			</column>
+			<column name="ticket_price" type="float" length="53" decimal="0" jt="8" mandatory="y" />
+			<column name="payment_date" type="date" length="10" decimal="0" jt="91" mandatory="y" />
+			<column name="payment_amount_tendered" type="float" length="53" decimal="0" jt="8" mandatory="y" />
+			<column name="payment_change" type="float" length="53" decimal="0" jt="8" mandatory="y" >
+				<defo>0</defo>
+			</column>
+			<column name="payment_mode" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="payment_balance" type="float" length="53" decimal="0" jt="8" />
+			<column name="create_user" type="int" length="10" decimal="0" jt="4" mandatory="y" >
+				<defo>1</defo>
+			</column>
+			<column name="create_date" type="date" length="10" decimal="0" jt="91" mandatory="y" />
+			<column name="update_user" type="int" length="10" decimal="0" jt="4" />
+			<column name="update_date" type="date" length="10" decimal="0" jt="91" />
+			<index name="Pk_Tbl_Payment" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<index name="idx_Tbl_Payment" unique="NORMAL" >
+				<column name="ticket_id" />
+			</index>
+			<fk name="fk_tbl_payment_tbl_ticket" to_schema="dbo" to_table="Tbl_Ticket" >
+				<fk_column name="ticket_id" pk="id" />
+			</fk>
+		</table>
+		<table name="Tbl_Piece" >
+			<comment><![CDATA[Table contenant l`ensemble des vetements, des accesoires de maison et autres choses du genre]]></comment>
+			<column name="id" type="int" length="10" decimal="0" jt="4" mandatory="y" autoincrement="y" >
+				<comment><![CDATA[l`identifiant de la piece
+]]></comment>
+			</column>
+			<column name="piece_description" type="varchar" length="100" decimal="0" jt="12" mandatory="y" >
+				<comment><![CDATA[La description de la piece]]></comment>
+			</column>
+			<column name="piece_price" type="float" length="53" decimal="0" jt="8" mandatory="y" >
+				<defo>0</defo>
+			</column>
+			<column name="piece_status" type="int" length="10" decimal="0" jt="4" />
+			<column name="create_user" type="int" length="10" decimal="0" jt="4" mandatory="y" >
+				<defo>1</defo>
+			</column>
+			<column name="create_date" type="date" length="10" decimal="0" jt="91" mandatory="y" />
+			<column name="update_user" type="int" length="10" decimal="0" jt="4" />
+			<column name="update_date" type="date" length="10" decimal="0" jt="91" />
+			<index name="Pk_Tbl_Piece" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+		</table>
+		<table name="Tbl_Service" >
+			<column name="id" type="int" length="10" decimal="0" jt="4" mandatory="y" autoincrement="y" />
+			<column name="service_name" type="varchar" length="100" decimal="0" jt="12" mandatory="y" />
+			<column name="service_charge" type="float" length="53" decimal="0" jt="8" mandatory="y" >
+				<defo>0</defo>
+			</column>
+			<column name="create_user" type="int" length="10" decimal="0" jt="4" mandatory="y" >
+				<defo>1</defo>
+			</column>
+			<column name="create_date" type="date" length="10" decimal="0" jt="91" mandatory="y" />
+			<column name="update_user" type="int" length="10" decimal="0" jt="4" />
+			<column name="update_date" type="date" length="10" decimal="0" jt="91" />
+			<index name="Pk_Tbl_Type_Service" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+		</table>
+		<table name="Tbl_Ticket" >
+			<comment><![CDATA[La gestion des commandes]]></comment>
+			<column name="id" type="int" length="10" decimal="0" jt="4" mandatory="y" autoincrement="y" />
+			<column name="customer_id" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="ticket_price" type="float" length="53" decimal="0" jt="8" mandatory="y" >
+				<defo>0</defo>
+				<comment><![CDATA[Le prix total de la commande]]></comment>
+			</column>
+			<column name="ticket_due_date" type="date" length="10" decimal="0" jt="91" mandatory="y" >
+				<comment><![CDATA[Date d`entree de la commande]]></comment>
+			</column>
+			<column name="ticket_delivery_date" type="date" length="10" decimal="0" jt="91" mandatory="y" >
+				<comment><![CDATA[Date de livraison de la commande]]></comment>
+			</column>
+			<column name="ticket_status_pay" type="bit" length="1" decimal="0" jt="-7" mandatory="y" >
+				<defo>0</defo>
+			</column>
+			<column name="ticket_status_delivered" type="bit" length="1" decimal="0" jt="-7" mandatory="y" >
+				<defo>0</defo>
+			</column>
+			<column name="create_user" type="int" length="10" decimal="0" jt="4" mandatory="y" >
+				<defo>1</defo>
+			</column>
+			<column name="create_date" type="date" length="10" decimal="0" jt="91" mandatory="y" />
+			<column name="update_user" type="int" length="10" decimal="0" jt="4" />
+			<column name="update_date" type="date" length="10" decimal="0" jt="91" />
+			<index name="Pk_Tbl_Ticket" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<index name="idx_Tbl_Ticket" unique="NORMAL" >
+				<column name="customer_id" />
+			</index>
+			<fk name="fk_tbl_ticket_tbl_customer" to_schema="dbo" to_table="Tbl_Customer" >
+				<fk_column name="customer_id" pk="id" />
+			</fk>
+		</table>
+		<table name="Tbl_Type_Employee" >
+			<column name="id" type="int" length="10" decimal="0" jt="4" mandatory="y" autoincrement="y" />
+			<column name="type_name" type="varchar" length="50" decimal="0" jt="12" mandatory="y" >
+				<defo>&#039;ADMIN&#039;</defo>
+			</column>
+			<column name="can_add_customer" type="bit" length="1" decimal="0" jt="-7" mandatory="y" >
+				<defo>0</defo>
+			</column>
+			<column name="can_add_piece" type="bit" length="1" decimal="0" jt="-7" mandatory="y" />
+			<column name="can_add_ticket" type="bit" length="1" decimal="0" jt="-7" mandatory="y" >
+				<defo>0</defo>
+			</column>
+			<column name="can_add_color" type="bit" length="1" decimal="0" jt="-7" mandatory="y" >
+				<defo>0</defo>
+			</column>
+			<column name="can_add_service" type="bit" length="1" decimal="0" jt="-7" mandatory="y" >
+				<defo>0</defo>
+			</column>
+			<column name="can_add_payment" type="bit" length="1" decimal="0" jt="-7" mandatory="y" >
+				<defo>0</defo>
+			</column>
+			<column name="can_add_type_piece" type="bit" length="1" decimal="0" jt="-7" mandatory="y" >
+				<defo>0</defo>
+			</column>
+			<column name="can_add_employee" type="bit" length="1" decimal="0" jt="-7" mandatory="y" >
+				<defo>0</defo>
+			</column>
+			<column name="can_update_customer" type="bit" length="1" decimal="0" jt="-7" mandatory="y" >
+				<defo>0</defo>
+			</column>
+			<column name="can_update_ticket" type="bit" length="1" decimal="0" jt="-7" >
+				<defo>0</defo>
+			</column>
+			<column name="can_update_piece" type="bit" length="1" decimal="0" jt="-7" mandatory="y" >
+				<defo>0</defo>
+			</column>
+			<column name="can_update_color" type="bit" length="1" decimal="0" jt="-7" />
+			<column name="can_update_employee" type="bit" length="1" decimal="0" jt="-7" mandatory="y" />
+			<column name="can_update_type_piece" type="bit" length="1" decimal="0" jt="-7" mandatory="y" >
+				<defo>0</defo>
+			</column>
+			<column name="can_search_customer" type="bit" length="1" decimal="0" jt="-7" mandatory="y" >
+				<defo>0</defo>
+			</column>
+			<column name="can_search_piece" type="bit" length="1" decimal="0" jt="-7" mandatory="y" >
+				<defo>0</defo>
+			</column>
+			<column name="can_search_ticket" type="bit" length="1" decimal="0" jt="-7" mandatory="y" >
+				<defo>0</defo>
+			</column>
+			<column name="can_search_color" type="bit" length="1" decimal="0" jt="-7" mandatory="y" >
+				<defo>0</defo>
+			</column>
+			<column name="can_search_type_piece" type="bit" length="1" decimal="0" jt="-7" mandatory="y" >
+				<defo>0</defo>
+			</column>
+			<column name="can_search_employee" type="bit" length="1" decimal="0" jt="-7" mandatory="y" >
+				<defo>0</defo>
+			</column>
+			<column name="can_search_payment" type="bit" length="1" decimal="0" jt="-7" mandatory="y" >
+				<defo>0</defo>
+			</column>
+			<column name="can_delete_customer" type="bit" length="1" decimal="0" jt="-7" mandatory="y" >
+				<defo>0</defo>
+			</column>
+			<column name="can_delete_ticket" type="bit" length="1" decimal="0" jt="-7" mandatory="y" >
+				<defo>0</defo>
+			</column>
+			<column name="can_delete_piece" type="bit" length="1" decimal="0" jt="-7" mandatory="y" >
+				<defo>0</defo>
+			</column>
+			<column name="can_delete_color" type="bit" length="1" decimal="0" jt="-7" mandatory="y" >
+				<defo>0</defo>
+			</column>
+			<column name="can_delete_type_service" type="bit" length="1" decimal="0" jt="-7" mandatory="y" >
+				<defo>0</defo>
+			</column>
+			<column name="can_delete_employee" type="bit" length="1" decimal="0" jt="-7" mandatory="y" >
+				<defo>0</defo>
+			</column>
+			<index name="Pk_Tbl_Type_Employee" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+		</table>
+		<table name="Tbl_Type_Piece" >
+			<column name="id" type="int" length="10" decimal="0" jt="4" mandatory="y" autoincrement="y" />
+			<column name="piece_name" type="varchar" length="100" decimal="0" jt="12" mandatory="y" >
+				<defo>&#039;DEFAULT&#039;</defo>
+			</column>
+			<column name="create_user" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="create_date" type="date" length="10" decimal="0" jt="91" mandatory="y" />
+			<column name="update_user" type="int" length="10" decimal="0" jt="4" />
+			<column name="update_date" type="date" length="10" decimal="0" jt="91" />
+			<index name="Pk_Tbl_Type_Piece" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+		</table>
+	</schema>
+	<connector name="SqlServer" database="SqlServer" driver_class="net.sourceforge.jtds.jdbc.Driver" driver_jar="jtds-1.3.1.jar" driver_desc="Windows Authentication" host="localhost" port="1433" instance="dry_cleaning_db" user="admin" passwd="ZWRnZTIyMA==" />
+	<connector name="SqlServer_001" database="SqlServer" driver_class="net.sourceforge.jtds.jdbc.Driver" driver_jar="jtds-1.3.1.jar" driver_desc="Windows Authentication" host="localhost" port="1433" instance="dry_cleaning_db" user="admin" passwd="ZWRnZTIyMA==" />
+	<layout id="Layout_43255ac" name="sch_dry_cleaning" show_relation_columns="y" >
+		<entity schema="dbo" name="Tbl_Color" color="bef5b3" x="405" y="45" />
+		<entity schema="dbo" name="Tbl_Customer" color="f5d8b3" x="255" y="870" />
+		<entity schema="dbo" name="Tbl_Details_Ticket" color="bef5b3" x="240" y="45" />
+		<entity schema="dbo" name="Tbl_Enterprise" color="bef5b3" x="45" y="285" />
+		<entity schema="dbo" name="Tbl_Payment" color="b3ccf5" x="615" y="345" />
+		<entity schema="dbo" name="Tbl_Piece" color="bef5b3" x="405" y="285" />
+		<entity schema="dbo" name="Tbl_Service" color="b3ccf5" x="840" y="345" />
+		<entity schema="dbo" name="Tbl_Ticket" color="f5d8b3" x="45" y="600" />
+		<entity schema="dbo" name="Tbl_Type_Piece" color="f5d8b3" x="255" y="600" />
+		<entity schema="dbo" name="Tbl_Type_Employee" color="b3ccf5" x="1035" y="45" />
+		<entity schema="dbo" name="Tbl_Employee" color="b3ccf5" x="840" y="45" />
+		<script name="Sql" id="Query_2fb5ab46" language="SQL" >
+			<string><![CDATA[CREATE SCHEMA sch_dry_cleaning;
+
+CREATE TABLE sch_dry_cleaning.Tbl_Color ( 
+	id                   int NOT NULL   IDENTITY,
+	color_name           varchar(50) NOT NULL CONSTRAINT defo_Tbl_Color_color_name DEFAULT 'COLOR'  ,
+	color_code           varchar(10) NOT NULL   ,
+	create_user          int NOT NULL CONSTRAINT defo_Tbl_Color_create_user DEFAULT 1  ,
+	create_date          date NOT NULL   ,
+	update_user          int    ,
+	update_date          date    ,
+	CONSTRAINT Pk_Tbl_Color PRIMARY KEY ( id )
+ );
+
+CREATE TABLE sch_dry_cleaning.Tbl_Customer ( 
+	id                   int NOT NULL   IDENTITY,
+	customer_id          int NOT NULL   ,
+	customer_first_name  varchar(100) NOT NULL   ,
+	customer_last_name   varchar(100) NOT NULL   ,
+	customer_adress      varchar(200) NOT NULL   ,
+	customer_phone_1     varchar(20) NOT NULL   ,
+	customer_phone_2     varchar(20)    ,
+	customer_email       varchar(100)    ,
+	customer_prefered_communication varchar(20)    ,
+	customer_remarks     varchar(250)    ,
+	customer_status      int NOT NULL CONSTRAINT defo_Tbl_Customer_customer_status DEFAULT 1  ,
+	customer_delivery_mode int    ,
+	create_user          varchar(25) NOT NULL CONSTRAINT defo_Tbl_Customer_create_user DEFAULT 'ADMIN'  ,
+	create_date          date NOT NULL   ,
+	update_user          varchar(20) NOT NULL CONSTRAINT defo_Tbl_Customer_update_user DEFAULT 'ADMIN'  ,
+	update_date          date    ,
+	CONSTRAINT Pk_Tbl_Customer PRIMARY KEY ( id ),
+	CONSTRAINT Idx_Tbl_Customer UNIQUE ( customer_id ) 
+ );
+
+exec sp_addextendedproperty  @name=N'MS_Description', @value=N'Table assurant la gestion des clients. L`ensemble d`informations sur les clients' , @level0type=N'SCHEMA',@level0name=N'sch_dry_cleaning', @level1type=N'TABLE',@level1name=N'Tbl_Customer';;
+
+exec sp_addextendedproperty  @name=N'MS_Description', @value=N'Identifiant unqiue identifiant le client' , @level0type=N'SCHEMA',@level0name=N'sch_dry_cleaning', @level1type=N'TABLE',@level1name=N'Tbl_Customer', @level2type=N'COLUMN',@level2name=N'customer_id';
+
+CREATE TABLE sch_dry_cleaning.Tbl_Enterprise ( 
+	id                   int NOT NULL   IDENTITY,
+	enterprise_name      varchar(100) NOT NULL   ,
+	enterprise_adress    varchar(150) NOT NULL   ,
+	enterprise_slogan    varchar(250)    ,
+	enterprise_telephone varchar(20)    ,
+	enterprise_email     varchar(50)    ,
+	enterprise_logo      image    ,
+	create_user          int NOT NULL   ,
+	create_date          date NOT NULL   ,
+	update_user          int    ,
+	update_date          date    ,
+	CONSTRAINT Pk_Tbl_Enterprise PRIMARY KEY ( id )
+ );
+
+CREATE TABLE sch_dry_cleaning.Tbl_Piece ( 
+	id                   int NOT NULL   IDENTITY,
+	piece_description    varchar(100) NOT NULL   ,
+	piece_price          float NOT NULL CONSTRAINT defo_Tbl_Piece_piece_price DEFAULT 0  ,
+	piece_status         int    ,
+	create_user          int NOT NULL CONSTRAINT defo_Tbl_Piece_create_user DEFAULT 1  ,
+	create_date          date NOT NULL   ,
+	update_user          int    ,
+	update_date          date    ,
+	CONSTRAINT Pk_Tbl_Piece PRIMARY KEY ( id )
+ );
+
+exec sp_addextendedproperty  @name=N'MS_Description', @value=N'Table contenant l`ensemble des vetements, des accesoires de maison et autres choses du genre' , @level0type=N'SCHEMA',@level0name=N'sch_dry_cleaning', @level1type=N'TABLE',@level1name=N'Tbl_Piece';;
+
+exec sp_addextendedproperty  @name=N'MS_Description', @value=N'l`identifiant de la piece
+' , @level0type=N'SCHEMA',@level0name=N'sch_dry_cleaning', @level1type=N'TABLE',@level1name=N'Tbl_Piece', @level2type=N'COLUMN',@level2name=N'id';
+
+exec sp_addextendedproperty  @name=N'MS_Description', @value=N'La description de la piece' , @level0type=N'SCHEMA',@level0name=N'sch_dry_cleaning', @level1type=N'TABLE',@level1name=N'Tbl_Piece', @level2type=N'COLUMN',@level2name=N'piece_description';
+
+CREATE TABLE sch_dry_cleaning.Tbl_Service ( 
+	id                   int NOT NULL   IDENTITY,
+	service_name         varchar(100) NOT NULL   ,
+	service_charge       float NOT NULL CONSTRAINT defo_Tbl_Service_service_charge DEFAULT 0  ,
+	create_user          int NOT NULL CONSTRAINT defo_Tbl_Service_create_user DEFAULT 1  ,
+	create_date          date NOT NULL   ,
+	update_user          int    ,
+	update_date          date    ,
+	CONSTRAINT Pk_Tbl_Type_Service PRIMARY KEY ( id )
+ );
+
+CREATE TABLE sch_dry_cleaning.Tbl_Ticket ( 
+	id                   int NOT NULL   IDENTITY,
+	customer_id          int NOT NULL   ,
+	ticket_price         float NOT NULL CONSTRAINT defo_Tbl_Ticket_ticket_price DEFAULT 0  ,
+	ticket_due_date      date NOT NULL   ,
+	ticket_delivery_date date NOT NULL   ,
+	ticket_status_pay    bit NOT NULL CONSTRAINT defo_Tbl_Ticket_ticket_status_pay DEFAULT 0  ,
+	ticket_status_delivered bit NOT NULL CONSTRAINT defo_Tbl_Ticket_ticket_status_delivered DEFAULT 0  ,
+	create_user          int NOT NULL CONSTRAINT defo_Tbl_Ticket_create_user DEFAULT 1  ,
+	create_date          date NOT NULL   ,
+	update_user          int    ,
+	update_date          date    ,
+	CONSTRAINT Pk_Tbl_Ticket PRIMARY KEY ( id )
+ );
+
+CREATE INDEX idx_Tbl_Ticket ON sch_dry_cleaning.Tbl_Ticket ( customer_id );
+
+exec sp_addextendedproperty  @name=N'MS_Description', @value=N'La gestion des commandes' , @level0type=N'SCHEMA',@level0name=N'sch_dry_cleaning', @level1type=N'TABLE',@level1name=N'Tbl_Ticket';;
+
+exec sp_addextendedproperty  @name=N'MS_Description', @value=N'Le prix total de la commande' , @level0type=N'SCHEMA',@level0name=N'sch_dry_cleaning', @level1type=N'TABLE',@level1name=N'Tbl_Ticket', @level2type=N'COLUMN',@level2name=N'ticket_price';
+
+exec sp_addextendedproperty  @name=N'MS_Description', @value=N'Date d`entree de la commande' , @level0type=N'SCHEMA',@level0name=N'sch_dry_cleaning', @level1type=N'TABLE',@level1name=N'Tbl_Ticket', @level2type=N'COLUMN',@level2name=N'ticket_due_date';
+
+exec sp_addextendedproperty  @name=N'MS_Description', @value=N'Date de livraison de la commande' , @level0type=N'SCHEMA',@level0name=N'sch_dry_cleaning', @level1type=N'TABLE',@level1name=N'Tbl_Ticket', @level2type=N'COLUMN',@level2name=N'ticket_delivery_date';
+
+CREATE TABLE sch_dry_cleaning.Tbl_Type_Employee ( 
+	id                   int NOT NULL   IDENTITY,
+	type_name            varchar(50) NOT NULL CONSTRAINT defo_Tbl_Type_Employee_type_name DEFAULT 'ADMIN'  ,
+	can_add_customer     bit NOT NULL CONSTRAINT defo_Tbl_Type_Employee_can_add_customer DEFAULT 0  ,
+	can_add_piece        bit NOT NULL   ,
+	can_add_ticket       bit NOT NULL CONSTRAINT defo_Tbl_Type_Employee_can_add_ticket DEFAULT 0  ,
+	can_add_color        bit NOT NULL CONSTRAINT defo_Tbl_Type_Employee_can_add_color DEFAULT 0  ,
+	can_add_service      bit NOT NULL CONSTRAINT defo_Tbl_Type_Employee_can_add_service DEFAULT 0  ,
+	can_add_payment      bit NOT NULL CONSTRAINT defo_Tbl_Type_Employee_can_add_payment DEFAULT 0  ,
+	can_add_type_piece   bit NOT NULL CONSTRAINT defo_Tbl_Type_Employee_can_add_type_piece DEFAULT 0  ,
+	can_add_employee     bit NOT NULL CONSTRAINT defo_Tbl_Type_Employee_can_add_employee DEFAULT 0  ,
+	can_update_customer  bit NOT NULL CONSTRAINT defo_Tbl_Type_Employee_can_update_customer DEFAULT 0  ,
+	can_update_ticket    bit  CONSTRAINT defo_Tbl_Type_Employee_can_update_ticket DEFAULT 0  ,
+	can_update_piece     bit NOT NULL CONSTRAINT defo_Tbl_Type_Employee_can_update_piece DEFAULT 0  ,
+	can_update_color     bit    ,
+	can_update_employee  bit NOT NULL   ,
+	can_update_type_piece bit NOT NULL CONSTRAINT defo_Tbl_Type_Employee_can_update_type_piece DEFAULT 0  ,
+	can_search_customer  bit NOT NULL CONSTRAINT defo_Tbl_Type_Employee_can_search_customer DEFAULT 0  ,
+	can_search_piece     bit NOT NULL CONSTRAINT defo_Tbl_Type_Employee_can_search_piece DEFAULT 0  ,
+	can_search_ticket    bit NOT NULL CONSTRAINT defo_Tbl_Type_Employee_can_search_ticket DEFAULT 0  ,
+	can_search_color     bit NOT NULL CONSTRAINT defo_Tbl_Type_Employee_can_search_color DEFAULT 0  ,
+	can_search_type_piece bit NOT NULL CONSTRAINT defo_Tbl_Type_Employee_can_search_type_piece DEFAULT 0  ,
+	can_search_employee  bit NOT NULL CONSTRAINT defo_Tbl_Type_Employee_can_search_employee DEFAULT 0  ,
+	can_search_payment   bit NOT NULL CONSTRAINT defo_Tbl_Type_Employee_can_search_payment DEFAULT 0  ,
+	can_delete_customer  bit NOT NULL CONSTRAINT defo_Tbl_Type_Employee_can_delete_customer DEFAULT 0  ,
+	can_delete_ticket    bit NOT NULL CONSTRAINT defo_Tbl_Type_Employee_can_delete_ticket DEFAULT 0  ,
+	can_delete_piece     bit NOT NULL CONSTRAINT defo_Tbl_Type_Employee_can_delete_piece DEFAULT 0  ,
+	can_delete_color     bit NOT NULL CONSTRAINT defo_Tbl_Type_Employee_can_delete_color DEFAULT 0  ,
+	can_delete_type_service bit NOT NULL CONSTRAINT defo_Tbl_Type_Employee_can_delete_type_service DEFAULT 0  ,
+	can_delete_employee  bit NOT NULL CONSTRAINT defo_Tbl_Type_Employee_can_delete_employee DEFAULT 0  ,
+	CONSTRAINT Pk_Tbl_Type_Employee PRIMARY KEY ( id )
+ );
+
+CREATE TABLE sch_dry_cleaning.Tbl_Type_Piece ( 
+	id                   int NOT NULL   IDENTITY,
+	piece_name           varchar(100) NOT NULL CONSTRAINT defo_Tbl_Type_Piece_piece_name DEFAULT 'DEFAULT'  ,
+	create_user          int NOT NULL   ,
+	create_date          date NOT NULL   ,
+	update_user          int    ,
+	update_date          date    ,
+	CONSTRAINT Pk_Tbl_Type_Piece PRIMARY KEY ( id )
+ );
+
+CREATE TABLE sch_dry_cleaning.Tbl_Details_Ticket ( 
+	id                   int NOT NULL   IDENTITY,
+	piece_id             int NOT NULL   ,
+	ticke_id             int NOT NULL   ,
+	piece_type           int NOT NULL   ,
+	piece_state          int NOT NULL   ,
+	piece_color          int NOT NULL   ,
+	piece_mark           int NOT NULL   ,
+	price                float NOT NULL   ,
+	type_service         int NOT NULL   ,
+	CONSTRAINT Pk_Tbl_Details_Ticket PRIMARY KEY ( id )
+ );
+
+CREATE INDEX idx_Tbl_Details_Ticket ON sch_dry_cleaning.Tbl_Details_Ticket ( piece_id );
+
+CREATE INDEX idx_Tbl_Details_Ticket_0 ON sch_dry_cleaning.Tbl_Details_Ticket ( piece_color );
+
+CREATE INDEX idx_Tbl_Details_Ticket_1 ON sch_dry_cleaning.Tbl_Details_Ticket ( piece_type );
+
+CREATE INDEX idx_Tbl_Details_Ticket_2 ON sch_dry_cleaning.Tbl_Details_Ticket ( ticke_id );
+
+CREATE INDEX idx_Tbl_Details_Ticket_3 ON sch_dry_cleaning.Tbl_Details_Ticket ( type_service );
+
+exec sp_addextendedproperty  @name=N'MS_Description', @value=N'Ensembles des pieces dans un ticket' , @level0type=N'SCHEMA',@level0name=N'sch_dry_cleaning', @level1type=N'TABLE',@level1name=N'Tbl_Details_Ticket';;
+
+exec sp_addextendedproperty  @name=N'MS_Description', @value=N'Une piece dans un ticket
+' , @level0type=N'SCHEMA',@level0name=N'sch_dry_cleaning', @level1type=N'TABLE',@level1name=N'Tbl_Details_Ticket', @level2type=N'COLUMN',@level2name=N'piece_id';
+
+CREATE TABLE sch_dry_cleaning.Tbl_Employee ( 
+	id                   int NOT NULL   IDENTITY,
+	employee_id          int NOT NULL   ,
+	employee_last_name   varchar(50) NOT NULL   ,
+	employee_first_name  varchar(50) NOT NULL   ,
+	employee_gender      varchar(1)    ,
+	employee_adress      varchar(150)    ,
+	employee_phone       varchar(20)    ,
+	employee_type        int NOT NULL   ,
+	employee_status      uniqueidentifier    ,
+	create_user          int NOT NULL CONSTRAINT defo_Tbl_Employee_create_user DEFAULT 1  ,
+	create_date          date NOT NULL   ,
+	update_user          int    ,
+	udpate_date          date    ,
+	CONSTRAINT Pk_Tbl_User PRIMARY KEY ( id ),
+	CONSTRAINT Idx_Tbl_Employee_employee_unique UNIQUE ( employee_id ) 
+ );
+
+CREATE INDEX idx_Tbl_Employee ON sch_dry_cleaning.Tbl_Employee ( employee_type );
+
+CREATE TABLE sch_dry_cleaning.Tbl_Payment ( 
+	id                   int NOT NULL   IDENTITY,
+	ticket_id            int NOT NULL   ,
+	ticket_price         float NOT NULL   ,
+	payment_date         date NOT NULL   ,
+	payment_amount_tendered float NOT NULL   ,
+	payment_change       float NOT NULL CONSTRAINT defo_Tbl_Payment_payment_change DEFAULT 0  ,
+	payment_mode         int NOT NULL   ,
+	payment_balance      float    ,
+	create_user          int NOT NULL CONSTRAINT defo_Tbl_Payment_create_user DEFAULT 1  ,
+	create_date          date NOT NULL   ,
+	update_user          int    ,
+	update_date          date    ,
+	CONSTRAINT Pk_Tbl_Payment PRIMARY KEY ( id )
+ );
+
+CREATE INDEX idx_Tbl_Payment ON sch_dry_cleaning.Tbl_Payment ( ticket_id );
+
+exec sp_addextendedproperty  @name=N'MS_Description', @value=N'Paiement des tickets' , @level0type=N'SCHEMA',@level0name=N'sch_dry_cleaning', @level1type=N'TABLE',@level1name=N'Tbl_Payment';;
+
+exec sp_addextendedproperty  @name=N'MS_Description', @value=N'Le numero du ticket
+' , @level0type=N'SCHEMA',@level0name=N'sch_dry_cleaning', @level1type=N'TABLE',@level1name=N'Tbl_Payment', @level2type=N'COLUMN',@level2name=N'ticket_id';
+
+ALTER TABLE sch_dry_cleaning.Tbl_Details_Ticket ADD CONSTRAINT fk_tbl_details_piece FOREIGN KEY ( piece_id ) REFERENCES sch_dry_cleaning.Tbl_Piece( id ) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+ALTER TABLE sch_dry_cleaning.Tbl_Details_Ticket ADD CONSTRAINT fk_tbl_details_color FOREIGN KEY ( piece_color ) REFERENCES sch_dry_cleaning.Tbl_Color( id ) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+ALTER TABLE sch_dry_cleaning.Tbl_Details_Ticket ADD CONSTRAINT fk_tbl_details_Type_piece FOREIGN KEY ( piece_type ) REFERENCES sch_dry_cleaning.Tbl_Type_Piece( id ) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+ALTER TABLE sch_dry_cleaning.Tbl_Details_Ticket ADD CONSTRAINT fk_tbl_details_ticket FOREIGN KEY ( ticke_id ) REFERENCES sch_dry_cleaning.Tbl_Ticket( id ) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+ALTER TABLE sch_dry_cleaning.Tbl_Details_Ticket ADD CONSTRAINT fk_tbl_details_ticket_service FOREIGN KEY ( type_service ) REFERENCES sch_dry_cleaning.Tbl_Service( id ) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+ALTER TABLE sch_dry_cleaning.Tbl_Employee ADD CONSTRAINT fk_tbl_employee_type_employee FOREIGN KEY ( employee_type ) REFERENCES sch_dry_cleaning.Tbl_Type_Employee( id ) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+ALTER TABLE sch_dry_cleaning.Tbl_Payment ADD CONSTRAINT fk_tbl_payment_tbl_ticket FOREIGN KEY ( ticket_id ) REFERENCES sch_dry_cleaning.Tbl_Ticket( id ) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+ALTER TABLE sch_dry_cleaning.Tbl_Ticket ADD CONSTRAINT fk_tbl_ticket_tbl_customer FOREIGN KEY ( customer_id ) REFERENCES sch_dry_cleaning.Tbl_Customer( id ) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+]]></string>
+		</script>
+		<script name="Tbl_Type_Employee" id="Query_62f0c06" language="SQL" >
+			<string><![CDATA[SELECT * 
+FROM
+	dbo.Tbl_Type_Employee e;]]></string>
+		</script>
+		<browser id="Browse_29db412f" name="Tbl_Employee" >
+			<browse_table schema="dbo" entity="Tbl_Employee" x="10" y="10" width="400" height="300" />
+		</browser>
+	</layout>
+</project>
