@@ -5,15 +5,19 @@
 
 <title>List Of Customers</title>
     <th:block layout:fragment="custom-css" th:remove="tag">
+        <!-- Data Tables -->
         <link href="css/plugins/jQueryUI/jquery-ui-1.10.4.custom.min.css" media="screen" th:href="@{/assets/css/plugins/jQueryUI/jquery-ui-1.10.4.custom.min.css}" rel="stylesheet" type="text/css" />
-        <link href="css/plugins/jqGrid/ui.jqgrid.css" rel="stylesheet" media="screen" th:href="@{/assets/css/plugins/jqGrid/ui.jqgrid.css}"  type="text/css" />
+        <link href="css/plugins/dataTables/dataTables.bootstrap.css" rel="stylesheet" th:href="@{/assets/css/plugins/dataTables/dataTables.bootstrap.css}" type="text/css"/>
+        <link href="css/plugins/dataTables/dataTables.responsive.css" rel="stylesheet" th:href="@{/assets/css/plugins/dataTables/dataTables.responsive.css}" type="text/css"/>
+        <link href="css/plugins/dataTables/dataTables.tableTools.min.css" rel="stylesheet" th:href="@{/assets/css/plugins/dataTables/dataTables.tableTools.min.css}" type="text/css"/>
+        <link href="css/plugins/dataTables/jquery.dataTables.min.css" rel="stylesheet" th:href="@{/assets/css/plugins/dataTables/jquery.dataTables.min.css}" type="text/css"/>
     </th:block>
 </head>
 <body>
 <div layout:fragment="content" th:remove="tag">
     <div class="wrapper wrapper-content  animated fadeInRight">
         <div class="row">
-            <div class="col-lg-6">
+            <div class="col-lg-8">
                 <div class="ibox float-e-margins">
                     <div class="ibox-title">
                         <h5>All the customers </h5>
@@ -31,25 +35,40 @@
                         </div>
                     </div>
                     <div class="ibox-content">
-                        <div class="row">
+                        <div class="row" >
 
-                            <div class="col-sm-12">
-                                <div class="input-group col-sm-12">
-                                    <input type="text" placeholder="Search" class="input-sm form-control " id="txtSearch" /> </div>
-                            </div>
-                        </div>
-                        <div class="jqGrid_wrapper">
-                            <table id="table_customer"></table>
-                            <div id="pager_customer_list"></div>
-                        </div>
                         <div>
-                            <button type="button" class="btn btn-sm btn-primary"  data-toggle="modal" data-target="#modalUpdate" id="btnUpdate">Update</button>
+                            <table id="table_customer" class="display" cellspacing="0" width="90%">
+                                <thead>
+                                <tr>
+                                    <th>Customer Id</th>
+                                    <th>First Name</th>
+                                    <th>Last Name</th>
+                                    <th>Phone</th>
+                                    <th>Update</th>
+                                 </tr>
+                                </thead>
+                                <tfoot>
+                                <tr>
+                                    <th>Customer Id</th>
+                                    <th>First Name</th>
+                                    <th>Last Name</th>
+                                    <th>Phone</th>
+                                    <th>Update</th>
+                                </tr>
+                                </tfoot>
+                            </table>
                         </div>
+                        <!--<div>-->
+                            <!--<button type="button" class="btn btn-sm btn-primary"  data-toggle="modal" data-target="#modalUpdate" id="btnUpdate">Update</button>-->
+                        <!--</div>-->
+                        </div>
+
 
                     </div>
                 </div>
             </div>
-            <div class="col-lg-6">
+            <div class="col-lg-4">
                <div id="detailsContents">
 
                 </div>
@@ -65,107 +84,80 @@
 </div>
 </body>
 <div layout:fragment="script-bottom" th:remove="tag">
-    <!-- jqGrid -->
-    <script src="js/plugins/jqGrid/i18n/grid.locale-en.js" th:src="@{/assets/js/plugins/jqGrid/i18n/grid.locale-en.js}"></script>
-    <script src="js/plugins/jqGrid/jquery.jqGrid.min.js" th:src="@{/assets/js/plugins/jqGrid/jquery.jqGrid.min.js}"></script>
+    <script src="js/plugins/dataTables/jquery.dataTables.js" th:src="@{/assets/js/plugins/dataTables/jquery.dataTables.js}"></script>
+    <script src="js/plugins/dataTables/dataTables.bootstrap.js" th:src="@{/assets/js/plugins/dataTables/dataTables.bootstrap.js}"></script>
+    <script src="js/plugins/dataTables/dataTables.responsive.js" th:src="@{/assets/js/plugins/dataTables/dataTables.responsive.js}"></script>
+    <script src="js/plugins/dataTables/dataTables.tableTools.min.js" th:src="@{/assets/js/plugins/dataTables/dataTables.tableTools.min.js}"></script>
+    <script src="js/plugins/dataTables/jquery.dataTables.min.js" th:src="@{/assets/js/plugins/dataTables/jquery.dataTables.min.js}"></script>
     <script type="text/javascript" th:inline="javascript">
         $(document).ready(function () {
-            var search = false;
-            var idRow=0;
-            var grid=$("#table_customer");
-            grid.jqGrid({
-                url: "/dry/customer/listOfCustomers",
-                datatype: "json",
-                mtype: 'GET',
-                colNames: ['Id', 'First Name', 'Last Name', 'Phone'],
-                shrinkToFit: true,
-                colModel:
-                        [
-                            {name: 'id', index: 'id', width: 15, editable: false, editoptions: {readonly: true, size: 10}, hidden: true},
-                            {name: 'customerFirstName', index: 'customerFirstName', search: true, width: 25}
-                            , {name: 'customerLastName', index: 'customerLastName', width: 25}
-                            , {name: 'customerPhone1', index: 'customerPhone1', width: 15}
-
-                        ],
-                postData: {},
-                rowNum: 10,
-                rowList: [10, 20, 40, 60],
-                height: 300,
-                width: 500,
-                autowidth: true,
-                rownumbers: true,
-                pager: '#pager_customer_list',
-                sortname: 'customerFirstName',
-                viewrecords: true,
-                sortorder: "asc",
-                caption: "Customers",
-                emptyrecords: "Empty records",
-                jsonReader: {
-                    root: "rows",
-                    page: "page",
-                    total: "total",
-                    records: "records",
-                    repeatitems: false,
-                    cell: "cell",
-                    id: "id"
+            var grid=$("#table_customer").DataTable({
+                processing:true,
+                ajax:{
+                    url:"/dry/customer/listOfCustomersDt",
+                    type:"GET",
+                    dataSrc : "data",
+                    scrollY:400,
                 },
-                beforeRequest:function(){
-                    this.p.postData._search = search;
-                    this.p.postData.firstName=$("#txtSearch").val();
-                },
-                onSelectRow:function(rowId){
-                    var row=$("#table_customer").getRowData(rowId);
-                    idRow=row.id;
-                    $.ajax({
-                        url: "/dry/customer/getCustomer?id=" + row.id,
-                        contentType: 'application/html; charset=utf-8',
-                        type: "GET",
-                        dataType: "html"
-                    }).success(function (data) {
-                        $("#detailsContents").html("");
-                        $("#detailsContents").html(data);
-                    })
-
-                    $.ajax({
-                    url: "/dry/customer/updateCustomer?id=" + idRow,
-                    contentType: 'application/html; charset=utf-8',
-                    type: "GET",
-                    dataType: "html"
-                    }).success(function (data) {
-                        $("#modalUpdate").html("");
-                        $("#modalUpdate").html(data);
-                    })
+                "columns":[
+                    {"data":"id"},
+                    {"data":"customerFirstName"},
+                    {"data":"customerLastName"},
+                    {"data":"customerPhone1"},
+                    {"data":"customerUpdate"}
+                ],
+                "columnDefs":[
+                    {
+                        "targets":[0],
+                        "visible":false,
+                    },
+                    {
+                        "targets":-1,
+                        "data":null,
+                        "defaultContent": "<button>Update</button>"
+                    }
 
 
-                },
-                loadComplete:function(){
-                    var ids=grid.jqGrid('getDataIDs')
-                    var firstRow=ids[0];
-                    grid.jqGrid('setSelection',firstRow);
+                ]
+            });
+            var id=0;
+            $('#table_customer tbody').on( 'click', 'tr', function () {
+
+                if ( $(this).hasClass('selected') ) {
+                    $(this).removeClass('selected');
                 }
-
-
-
-            });
-            $("#txtSearch").on('input', function (e) {
-                search = true;
-                $("#table_customer").trigger("reloadGrid", {page: 1});
-            });
-
+                else {
+                    grid.$('tr.selected').removeClass('selected');
+                    $(this).addClass('selected');
+                }
+                var rowData=grid.rows('.selected').data();
+                 id=rowData[0].id;
+                $.ajax({
+                    url:"/dry/customer/getCustomer?id="+id,
+                    type:"GET",
+                    contentType: 'application/html; charset=utf-8',
+                    dataType: "html"
+                }).success(function(data){
+                    $("#detailsContents").html("");
+                    $("#detailsContents").html(data);
+                });
+            } );
             var btnUpdate=$("#btnUpdate");
-//            btnUpdate.click(function(){
-//                $.ajax({
-//                    url: "/dry/customer/updateCustomer?id=" + idRow,
-//                    contentType: 'application/html; charset=utf-8',
-//                    type: "GET",
-//                    dataType: "html"
-//                }).success(function (data) {
-//                    $("#modalUpdate").html("");
-//                    $("#modalUpdate").html(data);
-//                })
-//            });
+            btnUpdate.click(function(){
+                var rowData=grid.rows('.selected').data();
+                $.ajax({
+                    url:"/dry/customer/updateCustomer?id="+id,
+                    type:"GET",
+                    contentType: 'application/html; charset=utf-8',
+                    dataType: "html"
+                }).success(function(data){
+                    $("#modalUpdate").html("");
+                    $("#modalUpdate").html(data);
+                });
 
-        });
+            });
+
+       });
     </script>
 </div>
 </html>

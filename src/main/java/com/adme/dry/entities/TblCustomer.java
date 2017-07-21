@@ -100,7 +100,6 @@ public class TblCustomer implements Serializable {
     @Size(min = 1, max = 20)
     @Column(name = "update_user")
     private String updateUser;
-    @Size(max = 10)
     @Column(name = "update_date")
     private String updateDate;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "customerId")
