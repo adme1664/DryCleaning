@@ -59,16 +59,20 @@ public class CustomerController {
     SessionBean sessionBean;
 
     @ModelAttribute("beanSession")
-    public SessionBean beanSession(){
+    public SessionBean beanSession() {
         return sessionBean;
     }
 
     @RequestMapping(value = "customer/add", method = RequestMethod.GET)
     public String getCustomer() {
-        log.info("Variable of Session:" + sessionBean.getCustomUserDetails().getTypeEmployeeBean().getTypeName());
+        try {
+            beanSession();
+            log.info("Variable of Session:" + sessionBean.getCustomUserDetails().getTypeEmployeeBean().getTypeName());
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
         return VIEW_BASE + "add";
     }
-
 
 
     @RequestMapping(value = "customer/addCustomer", method = RequestMethod.POST)
@@ -114,7 +118,7 @@ public class CustomerController {
     @RequestMapping(value = "customer/listOfCustomersDt", produces = "application/json")
     public
     @ResponseBody
-    DataTableModel<CustomerGridModel>listOfCustomersDataTables(
+    DataTableModel<CustomerGridModel> listOfCustomersDataTables(
 //            @RequestParam(value = "iDisplayStart",required =false) int iDisplayStart,
 //            @RequestParam(value = "iDisplayLength",required =false) int iDisplayLength,
 //            @RequestParam(value = "iColumns",required =false) int iColumns,
@@ -129,23 +133,23 @@ public class CustomerController {
 //            @RequestParam(value = "sSortDir_",required =false) String sSortDir_,
 //            @RequestParam(value = "mDataProp_",required =false) String mDataProp_,
 //            @RequestParam(value = "sEcho",required =false) int String
-    ){
+    ) {
         beanSession();
         log.info("Inside of the controller");
-        DataTableModel<CustomerGridModel> listOfCustomerGridModels=new DataTableModel<CustomerGridModel>();
+        DataTableModel<CustomerGridModel> listOfCustomerGridModels = new DataTableModel<CustomerGridModel>();
 //        Pageable pageRequest=new PageRequest()
 //        Page<TblCustomer> customers=customerService.findAllCustomers();
-        List<TblCustomer> customers=customerService.searchAllCustomers();
-        List<CustomerGridModel> listOf=new ArrayList<>();
-        for(TblCustomer customer: customers){
-            CustomerGridModel custoGrid=new CustomerGridModel();
+        List<TblCustomer> customers = customerService.searchAllCustomers();
+        List<CustomerGridModel> listOf = new ArrayList<>();
+        for (TblCustomer customer : customers) {
+            CustomerGridModel custoGrid = new CustomerGridModel();
             custoGrid.setId(customer.getId());
             custoGrid.setCustomerFirstName(customer.getCustomerFirstName());
             custoGrid.setCustomerLastName(customer.getCustomerLastName());
             custoGrid.setCustomerPhone1(customer.getCustomerPhone1());
             listOf.add(custoGrid);
         }
-        log.info("Number of customers:"+listOf.size());
+        log.info("Number of customers:" + listOf.size());
         listOfCustomerGridModels.setRecordsTotal(listOf.size());
         listOfCustomerGridModels.setRecordsFiltered(1);
         listOfCustomerGridModels.setDraw(10);
@@ -241,65 +245,61 @@ public class CustomerController {
     }
 
     @RequestMapping(value = "customer/getCustomer", method = RequestMethod.GET)
-    public
-    String getCustomerInformation(@RequestParam("id") String id,Model model){
+    public String getCustomerInformation(@RequestParam("id") String id, Model model) {
         String methodName = "getCustomerInformation";
-        try
-        {
+        try {
             beanSession();
-            if(id!=null && !id.equalsIgnoreCase("")){
-                log.info("Customer number"+id);
-                int customerId=Integer.parseInt(id);
-                CustomerBean customerBean=mapper.tblCustomerToCustomerBean(customerService.getCustomerById(customerId));
-                log.info("Customer name"+customerBean.getCustomerFirstName());
-                model.addAttribute("customer",customerBean);
-                return VIEW_BASE+ "customerDetails";
+            if (id != null && !id.equalsIgnoreCase("")) {
+                log.info("Customer number" + id);
+                int customerId = Integer.parseInt(id);
+                CustomerBean customerBean = mapper.tblCustomerToCustomerBean(customerService.getCustomerById(customerId));
+                log.info("Customer name" + customerBean.getCustomerFirstName());
+                model.addAttribute("customer", customerBean);
+                return VIEW_BASE + "customerDetails";
             }
-        }
-        catch (Exception ex){
+        } catch (Exception ex) {
             log.info(ERROR_START_MESSAGE + "" + CLASSNAME + "/" + methodName + ":" + ex.getMessage());
             ex.printStackTrace();
         }
-        return VIEW_BASE+"customerDetails";
+        return VIEW_BASE + "customerDetails";
     }
-    @RequestMapping(value="customer/updateCustomer", method = RequestMethod.GET)
-    public String updateCustomer(@RequestParam("id") String id, Model model){
+
+    @RequestMapping(value = "customer/updateCustomer", method = RequestMethod.GET)
+    public String updateCustomer(@RequestParam("id") String id, Model model) {
         String methodName = "updateCustomer";
-        try
-        {
-            int customerId=Integer.parseInt(id);
-            CustomerBean customerBean=mapper.tblCustomerToCustomerBean(customerService.getCustomerById(customerId));
-            log.info("Customer name"+customerBean.getCustomerFirstName());
-            model.addAttribute("customer",customerBean);
-            List<ComboboxModel> comboboxModels=new ArrayList<>();
-            for(int i=1; i<=utils.mapOfTypeCommunication().size();i++){
-                ComboboxModel cmb=new ComboboxModel();
+        try {
+            int customerId = Integer.parseInt(id);
+            CustomerBean customerBean = mapper.tblCustomerToCustomerBean(customerService.getCustomerById(customerId));
+            log.info("Customer name" + customerBean.getCustomerFirstName());
+            model.addAttribute("customer", customerBean);
+            List<ComboboxModel> comboboxModels = new ArrayList<>();
+            for (int i = 1; i <= utils.mapOfTypeCommunication().size(); i++) {
+                ComboboxModel cmb = new ComboboxModel();
                 cmb.setId(i);
                 cmb.setValue(utils.mapOfTypeCommunication().get(i).toString());
                 comboboxModels.add(cmb);
             }
             model.addAttribute("typeCommunications", comboboxModels);
-            ComboboxModel selected=new ComboboxModel();
+            ComboboxModel selected = new ComboboxModel();
             selected.setId(Integer.parseInt(customerBean.getCustomerPreferedCommunication()));
             selected.setValue(utils.mapOfTypeCommunication().get(Integer.parseInt(customerBean.getCustomerPreferedCommunication())).toString());
-           model.addAttribute("selected",selected);
-        }
-        catch (Exception ex){
+            model.addAttribute("selected", selected);
+        } catch (Exception ex) {
             log.info(ERROR_START_MESSAGE + "" + CLASSNAME + "/" + methodName + ":" + ex.getMessage());
             ex.printStackTrace();
         }
-        return VIEW_BASE+"updateCustomer";
+        return VIEW_BASE + "updateCustomer";
     }
+
     @RequestMapping(value = "customer/updateCustomer", method = RequestMethod.POST)
     public
     @ResponseBody
-
-    CustomerBean updateCustomer(@ModelAttribute("customerBean") CustomerBean customerBean){
-        try{
-            if(customerBean!=null){
-                log.info("Inside update Customer:"+customerBean.getId());
-                CustomerBean customerToUpdate=mapper.tblCustomerToCustomerBean(customerService.getCustomerById(customerBean.getId()));
-                log.info("Customer found:"+customerToUpdate.getId());
+    CustomerBean updateCustomer(@ModelAttribute("customerBean") CustomerBean customerBean) {
+        try {
+            if (customerBean != null) {
+                log.info("Inside update Customer:" + customerBean.getId());
+                CustomerBean customerToUpdate = mapper.tblCustomerToCustomerBean(customerService.getCustomerById(customerBean.getId()));
+                log.info("Customer found:" + customerToUpdate.getId());
                 customerToUpdate.setCustomerFirstName(customerBean.getCustomerFirstName());
                 customerToUpdate.setCustomerLastName(customerBean.getCustomerLastName());
                 customerToUpdate.setCustomerAdress(customerBean.getCustomerAdress());
@@ -312,17 +312,15 @@ public class CustomerController {
                 customerToUpdate.setCustomerRemarks(customerBean.getCustomerRemarks());
                 customerToUpdate.setUpdateDate(DateManager.getDateNow());
                 customerToUpdate.setUpdateUser(sessionBean.getCustomUserDetails().getUsername());
-                customerToUpdate=mapper.tblCustomerToCustomerBean(customerService.updateCustomer(mapper.customerBeanToTblCustomer(customerToUpdate)));
-               return customerToUpdate;
+                customerToUpdate = mapper.tblCustomerToCustomerBean(customerService.updateCustomer(mapper.customerBeanToTblCustomer(customerToUpdate)));
+                return customerToUpdate;
             }
-        }
-        catch (NotFoundException e) {
+        } catch (NotFoundException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        catch (Exception e){
-            e.printStackTrace();
-        }
-       return new CustomerBean();
+        return new CustomerBean();
 
     }
 }

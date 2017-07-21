@@ -96,7 +96,6 @@ public class TblCustomer implements Serializable {
     @Size(min = 1, max = 50)
     @Column(name = "create_date")
     private String createDate;
-    @Basic(optional = false)
     @Size(min = 1, max = 20)
     @Column(name = "update_user")
     private String updateUser;
