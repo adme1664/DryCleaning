@@ -61,6 +61,7 @@ public class CustomerServiceImpl implements CustomerService {
     public TblCustomer updateCustomer(TblCustomer customer) throws UpdateException {
         String methodName = "updateCustomer";
         try {
+            log.info("Inisde the service:"+methodName+"Id:"+customer.getId());
             TblCustomer customerToUpdate = getCustomerById(customer.getId());
             if (customerToUpdate.getId() != 0) {
                 customerToUpdate.setCustomerId(customer.getCustomerId());
@@ -91,6 +92,7 @@ public class CustomerServiceImpl implements CustomerService {
     public TblCustomer getCustomerById(int id) throws NotFoundException {
         String methodName = "getCustomerById";
         try {
+            log.info("The ID:"+id);
             return customerRepository.findOne(id);
         } catch (Exception ex) {
             log.info(ERROR_START_MESSAGE + "" + CLASSNAME + "/" + methodName + ":" + ex.getMessage());

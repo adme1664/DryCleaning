@@ -4,13 +4,18 @@ import com.adme.dry.bean.CustomerBean;
 import com.adme.dry.bean.SessionBean;
 import com.adme.dry.constant.Constant;
 import com.adme.dry.entities.TblCustomer;
+import com.adme.dry.exception.NotFoundException;
 import com.adme.dry.exception.SaveException;
 import com.adme.dry.mappers.BeanMapper;
 import com.adme.dry.mappers.Mapper;
 import com.adme.dry.models.CustomerGridModel;
+import com.adme.dry.models.DataTableModel;
 import com.adme.dry.models.JQGridResponseModel;
 import com.adme.dry.models.RequestCustomerModel;
 import com.adme.dry.services.CustomerServiceImpl;
+import com.adme.dry.utilities.ComboboxModel;
+import com.adme.dry.utilities.DateManager;
+import com.adme.dry.utilities.utils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -21,6 +26,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 
 import java.text.DateFormat;
@@ -28,6 +34,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Adme System on 6/21/2017.
@@ -70,13 +77,11 @@ public class CustomerController {
             beanSession();
             log.info("Name Of customer:" + customerBean.toString());
             log.info("VAriable of Session:" + sessionBean.getCustomUserDetails().getTypeEmployeeBean().getTypeName());
-            DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-            Date date = new Date();
-            String dateNow = dateFormat.format(date);
-            System.out.println(dateFormat.format(date));
+
+            System.out.println(DateManager.getDateNow());
             if (customerBean != null) {
-                customerBean.setCreateUser("ADMIN");
-                customerBean.setCreateDate(dateNow);
+                customerBean.setCreateUser(sessionBean.getCustomUserDetails().getUsername());
+                customerBean.setCreateDate(DateManager.getDateNow());
                 TblCustomer tblCustomer = mapper.customerBeanToTblCustomer(customerBean);
                 TblCustomer result = customerService.addCustomer(tblCustomer);
                 if (result.getId() != 0) {
@@ -104,6 +109,49 @@ public class CustomerController {
         }
         model.addAttribute("customers", searchAllCustomers);
         return VIEW_BASE + "search";
+    }
+
+    @RequestMapping(value = "customer/listOfCustomersDt", produces = "application/json")
+    public
+    @ResponseBody
+    DataTableModel<CustomerGridModel>listOfCustomersDataTables(
+//            @RequestParam(value = "iDisplayStart",required =false) int iDisplayStart,
+//            @RequestParam(value = "iDisplayLength",required =false) int iDisplayLength,
+//            @RequestParam(value = "iColumns",required =false) int iColumns,
+//            @RequestParam(value = "sSearch",required =false) String sSearch,
+//            @RequestParam(value = "bRegex",required =false) boolean bRegex,
+//            @RequestParam(value = "bSearchable_",required =false) boolean bSearchable_,
+//            @RequestParam(value = "sSearch_",required =false) String sSearch_,
+//            @RequestParam(value = "bRegex_",required =false) String bRegex_,
+//            @RequestParam(value = "bSortable_",required =false) boolean bSortable_,
+//            @RequestParam(value = "iSortingCols",required =false) int iSortingCols,
+//            @RequestParam(value = "iSortCol_",required =false) int iSortCol_,
+//            @RequestParam(value = "sSortDir_",required =false) String sSortDir_,
+//            @RequestParam(value = "mDataProp_",required =false) String mDataProp_,
+//            @RequestParam(value = "sEcho",required =false) int String
+    ){
+        beanSession();
+        log.info("Inside of the controller");
+        DataTableModel<CustomerGridModel> listOfCustomerGridModels=new DataTableModel<CustomerGridModel>();
+//        Pageable pageRequest=new PageRequest()
+//        Page<TblCustomer> customers=customerService.findAllCustomers();
+        List<TblCustomer> customers=customerService.searchAllCustomers();
+        List<CustomerGridModel> listOf=new ArrayList<>();
+        for(TblCustomer customer: customers){
+            CustomerGridModel custoGrid=new CustomerGridModel();
+            custoGrid.setId(customer.getId());
+            custoGrid.setCustomerFirstName(customer.getCustomerFirstName());
+            custoGrid.setCustomerLastName(customer.getCustomerLastName());
+            custoGrid.setCustomerPhone1(customer.getCustomerPhone1());
+            listOf.add(custoGrid);
+        }
+        log.info("Number of customers:"+listOf.size());
+        listOfCustomerGridModels.setRecordsTotal(listOf.size());
+        listOfCustomerGridModels.setRecordsFiltered(1);
+        listOfCustomerGridModels.setDraw(10);
+//        listOfCustomerGridModels.setError("Error while loading the customer");
+        listOfCustomerGridModels.setData(listOf);
+        return listOfCustomerGridModels;
     }
 
     @RequestMapping(value = "customer/listOfCustomers", produces = "application/json")
@@ -223,11 +271,58 @@ public class CustomerController {
             CustomerBean customerBean=mapper.tblCustomerToCustomerBean(customerService.getCustomerById(customerId));
             log.info("Customer name"+customerBean.getCustomerFirstName());
             model.addAttribute("customer",customerBean);
+            List<ComboboxModel> comboboxModels=new ArrayList<>();
+            for(int i=1; i<=utils.mapOfTypeCommunication().size();i++){
+                ComboboxModel cmb=new ComboboxModel();
+                cmb.setId(i);
+                cmb.setValue(utils.mapOfTypeCommunication().get(i).toString());
+                comboboxModels.add(cmb);
+            }
+            model.addAttribute("typeCommunications", comboboxModels);
+            ComboboxModel selected=new ComboboxModel();
+            selected.setId(Integer.parseInt(customerBean.getCustomerPreferedCommunication()));
+            selected.setValue(utils.mapOfTypeCommunication().get(Integer.parseInt(customerBean.getCustomerPreferedCommunication())).toString());
+           model.addAttribute("selected",selected);
         }
         catch (Exception ex){
             log.info(ERROR_START_MESSAGE + "" + CLASSNAME + "/" + methodName + ":" + ex.getMessage());
             ex.printStackTrace();
         }
         return VIEW_BASE+"updateCustomer";
+    }
+    @RequestMapping(value = "customer/updateCustomer", method = RequestMethod.POST)
+    public
+    @ResponseBody
+
+    CustomerBean updateCustomer(@ModelAttribute("customerBean") CustomerBean customerBean){
+        try{
+            if(customerBean!=null){
+                log.info("Inside update Customer:"+customerBean.getId());
+                CustomerBean customerToUpdate=mapper.tblCustomerToCustomerBean(customerService.getCustomerById(customerBean.getId()));
+                log.info("Customer found:"+customerToUpdate.getId());
+                customerToUpdate.setCustomerFirstName(customerBean.getCustomerFirstName());
+                customerToUpdate.setCustomerLastName(customerBean.getCustomerLastName());
+                customerToUpdate.setCustomerAdress(customerBean.getCustomerAdress());
+                customerToUpdate.setCustomerEmail(customerBean.getCustomerEmail());
+                customerToUpdate.setCustomerPhone1(customerBean.getCustomerPhone1());
+                customerToUpdate.setCustomerPhone2(customerBean.getCustomerPhone2());
+                customerToUpdate.setCustomerDeliveryMode(customerBean.getCustomerDeliveryMode());
+                customerToUpdate.setCustomerPreferedCommunication(customerBean.getCustomerPreferedCommunication());
+                customerToUpdate.setCustomerStatus(customerBean.getCustomerStatus());
+                customerToUpdate.setCustomerRemarks(customerBean.getCustomerRemarks());
+                customerToUpdate.setUpdateDate(DateManager.getDateNow());
+                customerToUpdate.setUpdateUser(sessionBean.getCustomUserDetails().getUsername());
+                customerToUpdate=mapper.tblCustomerToCustomerBean(customerService.updateCustomer(mapper.customerBeanToTblCustomer(customerToUpdate)));
+               return customerToUpdate;
+            }
+        }
+        catch (NotFoundException e) {
+            e.printStackTrace();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+       return new CustomerBean();
+
     }
 }

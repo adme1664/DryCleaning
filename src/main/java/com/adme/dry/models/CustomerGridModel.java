@@ -8,6 +8,7 @@ public class CustomerGridModel {
     private String customerFirstName;
     private String customerLastName;
     private String customerPhone1;
+    private String customerUpdate;
 
     public Integer getId() {
         return id;
@@ -39,5 +40,13 @@ public class CustomerGridModel {
 
     public void setCustomerPhone1(String customerPhone1) {
         this.customerPhone1 = customerPhone1;
+    }
+
+    public String getCustomerUpdate() {
+        return customerUpdate;
+    }
+
+    public void setCustomerUpdate(String customerUpdate) {
+        this.customerUpdate = customerUpdate;
     }
 }

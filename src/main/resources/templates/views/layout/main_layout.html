@@ -27,7 +27,7 @@
 <div id="wrapper" style="height: auto">
     <!--MENU BEGIN -->
     <div id="menu" layout:fragment="menu">
-        <nav class="navbar-default navbar-static-side" role="navigation">
+        <nav class="navbar-default navbar-static-side fixed" role="navigation">
             <div class="sidebar-collapse">
                 <ul class="nav" id="side-menu">
                     <li class="nav-header">
@@ -38,8 +38,14 @@
                             <a data-toggle="dropdown" class="dropdown-toggle" href="#">
                             <span class="clear"> <span class="block m-t-xs"> <strong class="font-bold">David
                                 Williams</strong>
-                             </span> <span class="text-muted text-xs block" th:text="${beanSession.getCustomUserDetails().getTypeEmployeeBean().getTypeName()}"><b
-                                    class="caret"></b></span> </span>
+                             </span>
+                                <!--<div th:if="${beanSession?.getCustomUserDetails()?.getTypeEmployeeBean()}">-->
+                                <span class="text-muted text-xs block"
+                                      th:text="${beanSession?.getCustomUserDetails()?.getTypeEmployeeBean()?.getTypeName()}">
+                                    <b class="caret"></b>
+                                </span>
+                                <!--</div>-->
+                            </span>
                             </a>
                             <ul class="dropdown-menu animated fadeInRight m-t-xs">
                                 <li><a href="login.html" th:href="@{/logout}">Logout</a></li>
@@ -169,7 +175,7 @@
 
         <!--<div class="row">-->
             <div class="col-lg-12">
-                <div layout:fragment="content" id="content">
+                <div layout:fragment="content" >
                     <div class="wrapper container">
 
                     </div>
