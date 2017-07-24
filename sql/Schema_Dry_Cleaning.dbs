@@ -41,15 +41,12 @@
 				<defo>&#039;ADMIN&#039;</defo>
 			</column>
 			<column name="create_date" type="date" length="10" decimal="0" jt="91" mandatory="y" />
-			<column name="update_user" type="varchar" length="20" decimal="0" jt="12" mandatory="y" >
+			<column name="update_user" type="varchar" length="20" jt="12" >
 				<defo>&#039;ADMIN&#039;</defo>
 			</column>
 			<column name="update_date" type="date" length="10" decimal="0" jt="91" />
 			<index name="Pk_Tbl_Customer" unique="PRIMARY_KEY" >
 				<column name="id" />
-			</index>
-			<index name="Idx_Tbl_Customer" unique="UNIQUE" >
-				<column name="customer_id" />
 			</index>
 		</table>
 		<table name="Tbl_Details_Ticket" >
@@ -117,6 +114,7 @@
 			<column name="create_date" type="date" length="10" decimal="0" jt="91" mandatory="y" />
 			<column name="update_user" type="int" length="10" decimal="0" jt="4" />
 			<column name="udpate_date" type="date" length="10" decimal="0" jt="91" />
+			<column name="employee_id" type="int" jt="4" />
 			<index name="Pk_Tbl_User" unique="PRIMARY_KEY" >
 				<column name="id" />
 			</index>
@@ -349,9 +347,9 @@
 	</schema>
 	<connector name="SqlServer" database="SqlServer" driver_class="net.sourceforge.jtds.jdbc.Driver" driver_jar="jtds-1.3.1.jar" driver_desc="Windows Authentication" host="localhost" port="1433" instance="dry_cleaning_db" user="admin" passwd="ZWRnZTIyMA==" />
 	<connector name="SqlServer_001" database="SqlServer" driver_class="net.sourceforge.jtds.jdbc.Driver" driver_jar="jtds-1.3.1.jar" driver_desc="Windows Authentication" host="localhost" port="1433" instance="dry_cleaning_db" user="admin" passwd="ZWRnZTIyMA==" />
+	<connector name="dry_cleaning" database="SqlServer" driver_class="net.sourceforge.jtds.jdbc.Driver" driver_jar="jtds-1.3.1.jar" driver_desc="SqlServer Authentication" host="localhost" port="1433" instance="dry_cleaning_db" user="admin" passwd="YWRtaW4=" />
 	<layout id="Layout_43255ac" name="sch_dry_cleaning" show_relation_columns="y" >
 		<entity schema="dbo" name="Tbl_Color" color="bef5b3" x="405" y="45" />
-		<entity schema="dbo" name="Tbl_Customer" color="f5d8b3" x="255" y="870" />
 		<entity schema="dbo" name="Tbl_Details_Ticket" color="bef5b3" x="240" y="45" />
 		<entity schema="dbo" name="Tbl_Enterprise" color="bef5b3" x="45" y="285" />
 		<entity schema="dbo" name="Tbl_Payment" color="b3ccf5" x="615" y="345" />
@@ -361,6 +359,7 @@
 		<entity schema="dbo" name="Tbl_Type_Piece" color="f5d8b3" x="255" y="600" />
 		<entity schema="dbo" name="Tbl_Type_Employee" color="b3ccf5" x="1035" y="45" />
 		<entity schema="dbo" name="Tbl_Employee" color="b3ccf5" x="840" y="45" />
+		<entity schema="dbo" name="Tbl_Customer" color="f5d8b3" x="255" y="870" />
 		<script name="Sql" id="Query_2fb5ab46" language="SQL" >
 			<string><![CDATA[CREATE SCHEMA sch_dry_cleaning;
 
@@ -608,6 +607,11 @@ FROM
 	dbo.Tbl_Employee e;]]></string>
 		</script>
 		<script name="Tbl_Type_Employee" id="Query_62f0c06" language="SQL" >
+			<string><![CDATA[SELECT * 
+FROM
+	dbo.Tbl_Type_Employee e;]]></string>
+		</script>
+		<script name="Tbl_Type_Employee_001" id="Query_20b6f39d" language="SQL" >
 			<string><![CDATA[SELECT * 
 FROM
 	dbo.Tbl_Type_Employee e;]]></string>

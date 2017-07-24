@@ -6,32 +6,165 @@
 <head>
     <meta charset="UTF-8"/>
     <title>AP Dry Cleaning |</title>
+    <th:block layout:fragment="custom-css" th:remove="tag">
+        <link href="css/drycleaning.css" media="screen" th:href="@{/assets/css/drycleaning.css}" rel="stylesheet" type="text/css" />
+    </th:block>
 
 </head>
 <body>
-        <div layout:fragment="content" th:remove="tag">
-            <div class="wrapper container">
+<div layout:fragment="content" th:remove="tag">
+    <div class="wrapper wrapper-content">
+        <div class="row"  style="width: 100%;">
+            <div class="col-lg-12">
                 <div class="row">
-                    <div class="col-lg-4">
-                        <div class="ibox float-e-margins">
-                            <div class="ibox-title">
-                                <h3>Bienvenue</h3>
+                    <div class="col-lg-3">
+                     <div class="card ibox">
+                        <a href="#">
+                            <img th:src="@{/assets/img/cust1.png}" alt="Avatar"
+                                 style="width: 50%;margin-right: auto; margin-left: auto;display: block;"/>
+                        </a>
+                        <a href="#">
+                            <div class=" ibox-content">
+                                <h4><b>Customers</b></h4>
+
+                                <p style="text-align: justify;">Register customers (Save a customer. Update
+                                    informations and delete </p>
                             </div>
+                        </a>
+                    </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="card ibox">
+
+                        <a href="#">
+                            <img th:src="@{/assets/img/garments.png}" alt="Avatar"
+                                 style="width: 50%; margin-right: auto; margin-left: auto;display: block;"/>
+                        </a>
+                        <a href="#">
                             <div class="ibox-content">
-                                <h4>Customers</h4>
+                                <h4><b>Garments</b></h4>
+
+                                <p style="text-align: justify;">Add new clothing, color, make, style.<br/>
+                                    Manage state of the clothing</p>
                             </div>
+                        </a>
+                    </div>
+                    </div>
+                    <div class="col-lg-3">
+                    <div class="card ibox">
+
+                        <a href="#">
+                            <img th:src="@{/assets/img/ticket1.png}" alt="Avatar"
+                                 style="width: 50%; margin-right: auto; margin-left: auto;display: block;"/>
+                        </a>
+                        <a href="#">
+                            <div class=" ibox-content">
+                                <h4><b>Tickets</b></h4>
+
+                                <p style="text-align: justify;">Add new clothing, color, make, style.<br/>
+                                Manage state of the clothing</p>
+                            </div>
+                        </a>
+                    </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="card ibox">
+
+                            <a href="#">
+                                <img th:src="@{/assets/img/payment.png}" alt="Avatar"
+                                     style="width: 50%; margin-right: auto; margin-left: auto;display: block;"/>
+                            </a>
+                            <a href="#">
+                                <div class=" ibox-content">
+                                    <h4><b>Payments</b></h4>
+
+                                    <p style="text-align: justify;">Add new clothing, color, make, style.<br/>
+                                        Manage state of the clothing</p>
+                                </div>
+                            </a>
                         </div>
                     </div>
                 </div>
+                <div class="row">
+                    <div class="col-lg-3">
+                    <div class="card ibox">
 
+                        <a href="#">
+                            <img th:src="@{/assets/img/report1.png}" alt="Avatar"
+                                 style="width: 50%; margin-right: auto; margin-left: auto;display: block;"/>
+                        </a>
+                        <a href="#">
+                            <div class=" ibox-content">
+                                <h4><b>Reports</b></h4>
+
+                                <p style="text-align: justify;">Add new clothing, color, make, style.<br/>
+                                    Manage state of the clothing</p>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                    <div class="col-lg-3">
+                        <div class="card ibox">
+
+                            <a href="#">
+                                <img th:src="@{/assets/img/employees.png}" alt="Avatar"
+                                     style="width: 50%; margin-right: auto; margin-left: auto;display: block;"/>
+                            </a>
+                            <a href="#">
+                                <div class=" ibox-content">
+                                    <h4><b>Employees</b></h4>
+
+                                    <p style="text-align: justify;">Add new clothing, color, make, style.<br/>
+                                        Manage state of the clothing</p>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="card ibox">
+
+                            <a href="#">
+                                <img th:src="@{/assets/img/printer.png}" alt="Avatar"
+                                     style="width: 50%; margin-right: auto; margin-left: auto;display: block;"/>
+                            </a>
+                            <a href="#">
+                                <div class=" ibox-content">
+                                    <h4><b>Printers and Labels settings</b></h4>
+
+                                    <p style="text-align: justify;">Add new clothing, color, make, style.<br/>
+                                        Manage state of the clothing</p>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="card ibox">
+
+                            <a href="#">
+                                <img th:src="@{/assets/img/setting.png}" alt="Avatar"
+                                     style="width: 50%; margin-right: auto; margin-left: auto;display: block;"/>
+                            </a>
+                            <a href="#">
+                                <div class=" ibox-content">
+                                    <h4><b>Settings</b></h4>
+
+                                    <p style="text-align: justify;">Add new clothing, color, make, style.<br/>
+                                        Manage state of the clothing</p>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
+    </div>
+</div>
 </body>
-    <script type="text/javascript">
-        $(document).ready(function () {
-            //$("#wrapper").height(screen.height-100);
-            $("#page-wrapper").height(screen.height-100);
+<script type="text/javascript">
+    $(document).ready(function () {
+        //$("#wrapper").height(screen.height-100);
+        $("#page-wrapper").height(screen.height - 100);
 
-        });
-    </script>
+    });
+</script>
 </html>

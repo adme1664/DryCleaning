@@ -18,13 +18,11 @@
     <div class="middle-box text-center loginscreen  animated fadeInDown">
         <div>
             <div>
-
-                <h4 class="logo-name">AP</h4>
+                <img th:src="@{/assets/img/logo_ap_1.png}" style="width: 100%;" />
+                <!--<h4 class="logo-name">AP</h4>-->
 
             </div>
-            <h2> Dry Cleaning</h2>
-            
-			<form class="m-t" role="form" id='login' th:action="@{/login}" method="POST">
+            <form class="m-t" role="form" id='login' th:action="@{/login}" method="POST">
                 <div class="form-group">
                     <input type="text" class="form-control" name="username" placeholder="username" required="true" />
                 </div>
